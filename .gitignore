@@ -1,0 +1,10 @@
+site/
+.venv/
+
+# Claude Code 로컬 설정
+.claude/settings.local.json
+
+__pycache__/
+
+# 단계 간 인수인계 작업 파일
+.work/

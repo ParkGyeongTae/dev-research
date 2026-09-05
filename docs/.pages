@@ -1,0 +1,7 @@
+nav:
+  - index.md
+  - 기술 리서치: topics
+  - 단편 노트: notes
+  - 개념 정리: concepts
+  - 용어집: glossary.md
+  - 작성 규칙: authoring
