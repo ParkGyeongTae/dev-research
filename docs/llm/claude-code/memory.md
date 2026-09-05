@@ -111,7 +111,7 @@ sidebar_position: 2
 :::info 이 저장소가 쓰고 있는 방식입니다
 > **Claude Code reads `CLAUDE.md`, not `AGENTS.md`.**
 
-이미 `AGENTS.md`를 쓰고 있다면 두 방법이 있습니다.
+이미 `AGENTS.md`를 쓰고 있다면 두 방법이 있습니다. 포맷 자체(무엇을 담고 어떤 도구가 읽는지)는 [AGENTS.md 오픈 포맷](../agents-md/spec.md)에 있습니다.
 :::
 
 **방법 1 — import (Claude 전용 지침을 덧붙일 수 있음)**
@@ -288,8 +288,8 @@ Claude가 스스로 쌓는 쪽입니다. 네 종류를 프런트매터의 `type`
 
 - 원문: [How Claude remembers your project](https://code.claude.com/docs/en/memory) — 확인 2026-09-05
 - 원문이 가리키는 관련 페이지: [Hooks](https://code.claude.com/docs/en/hooks-guide) · [Skills](https://code.claude.com/docs/en/skills) · [Settings](https://code.claude.com/docs/en/settings) · [Monorepos and large repos](https://code.claude.com/docs/en/large-codebases)
-- AGENTS.md 오픈 포맷: [agents.md](https://agents.md/) — Linux Foundation 산하 Agentic AI Foundation이 관리
-- 같은 도구의 다른 정리: [Claude Code 베스트 프랙티스](./best-practices.md)
+- AGENTS.md 오픈 포맷: [AGENTS.md 오픈 포맷](../agents-md/spec.md) (원문 [agents.md](https://agents.md/))
+- 같은 도구의 다른 정리: [Claude Code 베스트 프랙티스](./best-practices.md) · [CLAUDE.md 튜닝](./claude-md-tuning.md)
 
 ---
 

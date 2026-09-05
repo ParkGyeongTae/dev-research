@@ -274,6 +274,7 @@ done
 
 - 원문: [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) — 확인 2026-09-05
 - 원문이 가리키는 관련 페이지: [How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works) · [Extend Claude Code](https://code.claude.com/docs/en/features-overview) · [Common workflows](https://code.claude.com/docs/en/common-workflows) · [CLAUDE.md](https://code.claude.com/docs/en/memory)
+- 같은 도구의 다른 정리: [CLAUDE.md와 자동 메모리](./memory.md) · [CLAUDE.md 튜닝](./claude-md-tuning.md) — 후자는 공식 문서와 갈리는 지점을 모은 서드파티 관점입니다
 - 이 정리를 만든 환경: `claude --version` → **2.1.236 (Claude Code)**, macOS (Darwin 24.6.0)
 
 ---

@@ -169,6 +169,7 @@ MCP 서버를 붙일 조건이 네 가지로 정리돼 있습니다.
 
 - 원문: [Best practices — Getting started with Codex](https://learn.chatgpt.com/guides/best-practices) — 확인 2026-09-05
 - 같은 주제의 다른 도구 정리: [Claude Code 베스트 프랙티스](../claude-code/best-practices.md) · [Kiro 스펙 베스트 프랙티스](../kiro/specs-best-practices.md)
+- 이 문서가 다루는 지침 파일 포맷: [AGENTS.md 오픈 포맷](../agents-md/spec.md) — Codex는 그 포맷의 공동 제안자입니다
 
 ---
 
