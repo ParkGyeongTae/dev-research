@@ -6,7 +6,8 @@ sidebar_position: 1
 
 > **원문** [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) (code.claude.com/docs/en/best-practices)<br/>
 > **확인 날짜** 2026-09-05 — 원문에 판번호도 최종 수정일 표기도 없습니다<br/>
-> **검증 상태** 원문을 읽고 정리한 문서입니다. 직접 확인한 것은 그렇게 표시했고, 나머지는 **원문에서 읽은 것**입니다.
+> **검증 상태** 원문을 읽고 정리한 문서입니다. 직접 확인한 것은 그렇게 표시했고, 나머지는 **원문에서 읽은 것**입니다.<br/>
+> **확인 환경** `claude --version` → **2.1.236 (Claude Code)**, macOS (Darwin 24.6.0)
 
 ## 이 문서 전체를 지배하는 전제 하나
 
@@ -81,7 +82,7 @@ Claude는 의도를 추론할 수는 있어도 읽어낼 수는 없습니다. �
 
 매 대화 시작에 읽히는 파일입니다. `/init`으로 초안을 만들고, `/context`로 실제 로드됐는지 확인합니다.
 
-원문의 이 절은 요약본입니다 — **위치와 로드 순서, 200줄 크기 기준, `.claude/rules/`, 지시가 안 먹힐 때의 진단**은 별도 페이지에 있고 [CLAUDE.md와 자동 메모리](./memory.md)에 정리해 두었습니다.
+원문의 이 절은 요약본입니다 — **위치와 로드 순서, 200줄 크기 기준, `.claude/rules/`, 지시가 안 먹힐 때의 진단**은 별도 페이지인 [How Claude remembers your project](https://code.claude.com/docs/en/memory)에 있습니다.
 
 원문이 강조하는 건 **넣을 것보다 뺄 것**입니다.
 
@@ -270,12 +271,9 @@ done
 - 체크포인트가 Bash 변경을 못 잡는다는 서술 — 원문의 Warning을 옮긴 것이고 직접 재현하지 않았습니다
 - Agent view·Agent teams — 각각 research preview / experimental이라 **수명이 짧을 수 있습니다**
 
-## 참고
+## 원문이 가리키는 관련 페이지
 
-- 원문: [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) — 확인 2026-09-05
-- 원문이 가리키는 관련 페이지: [How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works) · [Extend Claude Code](https://code.claude.com/docs/en/features-overview) · [Common workflows](https://code.claude.com/docs/en/common-workflows) · [CLAUDE.md](https://code.claude.com/docs/en/memory)
-- 같은 도구의 다른 정리: [CLAUDE.md와 자동 메모리](./memory.md) · [CLAUDE.md 튜닝](./claude-md-tuning.md) — 후자는 공식 문서와 갈리는 지점을 모은 서드파티 관점입니다
-- 이 정리를 만든 환경: `claude --version` → **2.1.236 (Claude Code)**, macOS (Darwin 24.6.0)
+[How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works) · [Extend Claude Code](https://code.claude.com/docs/en/features-overview) · [Common workflows](https://code.claude.com/docs/en/common-workflows) · [CLAUDE.md](https://code.claude.com/docs/en/memory) — 모두 2026-09-05 확인
 
 ---
 

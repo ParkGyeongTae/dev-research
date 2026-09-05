@@ -40,7 +40,7 @@ sidebar_position: 2
 
 > The agent reads your file top to bottom, and **earlier lines carry more weight in practice**.
 
-**추측:** 자기 관찰에서 나온 경험칙으로 보입니다. 근거가 붙어 있지 않고, 벤더 공식 문서에서 "앞줄이 더 무겁다"는 서술을 찾지 못했습니다. Claude Code 공식 문서가 강조에 대해 말하는 것은 위치가 아니라 **선별**입니다 — 한 줄만 `IMPORTANT`로 표시하면 통하지만 여러 줄을 강조하면 아무것도 안 두드러진다는 것([베스트 프랙티스](../claude-code/best-practices.md)).
+**추측:** 자기 관찰에서 나온 경험칙으로 보입니다. 근거가 붙어 있지 않고, 벤더 공식 문서에서 "앞줄이 더 무겁다"는 서술을 찾지 못했습니다. Claude Code 공식 문서가 강조에 대해 말하는 것은 위치가 아니라 **선별**입니다 — 한 줄만 `IMPORTANT`로 표시하면 통하지만 여러 줄을 강조하면 아무것도 안 두드러진다는 것입니다([Best practices for Claude Code](https://code.claude.com/docs/en/best-practices), 확인 2026-09-05).
 
 중요한 것을 위에 두는 게 **손해는 아니므로** 따라도 됩니다. 다만 **"위에 뒀으니 지켜질 것"으로 믿으면 안 됩니다.** 반드시 막아야 하는 것은 위치가 아니라 훅으로 내려야 합니다.
 :::
@@ -94,7 +94,7 @@ Database: PostgreSQL via Drizzle ORM. Edit schemas in shared/src/schemas/, not .
 각 항목이 **저자가 실제로 겪은 특정 패턴 하나씩**을 막습니다. 중괄호 규칙이 없으면 절반쯤 한 줄짜리 무중괄호가 나오고, 화살표 함수 규칙이 없으면 코드베이스에 스타일이 섞인다고 씁니다.
 
 :::note 이 항목은 다른 자료와 갈립니다
-Tembo는 정반대로 **코드 스타일 규칙을 이 파일에 쓰지 말고 린터에 맡기라**고 합니다 — 지시 예산을 스타일에 태우지 말라는 논리입니다([CLAUDE.md 튜닝](../claude-code/claude-md-tuning.md)).
+반대로 **코드 스타일 규칙을 이 파일에 쓰지 말고 린터에 맡기라**는 주장도 있습니다 — 지시 예산을 스타일에 태우지 말라는 논리입니다([How to Write a Great CLAUDE.md](https://www.tembo.io/blog/how-to-write-a-great-claude-md), Tembo, 2026-02-04).
 
 **어느 쪽이 맞는지는 린터가 그 규칙을 강제할 수 있는지에 달렸습니다.** `prettier`가 잡는 중괄호·따옴표·들여쓰기는 린터 몫입니다. 반면 "인자 3개 이상이면 객체 파라미터", "최상위는 함수 선언문" 같은 것은 규칙을 따로 만들지 않는 한 린터가 못 잡습니다 — 그건 이 파일에 남을 값어치가 있습니다.
 
@@ -190,7 +190,7 @@ auto-reload 줄이 없으면 에이전트가 파일을 고칠 때마다 개발 �
 
 **세 숫자 모두 측정 결과가 아닙니다.** 숫자를 외우기보다 공식 문서의 **증상 기준**을 쓰는 게 낫습니다 — 규칙이 있는데도 계속 어긴다면 파일이 너무 긴 것입니다.
 
-참고로 이 저장소의 `AGENTS.md`는 **149줄**로 셋 중 가장 빡빡한 기준 안에 있습니다.
+이 저장소의 `AGENTS.md`는 확인 시점 **155줄**로 셋 중 가장 빡빡한 기준 안에 있습니다(직접 확인, 2026-09-05).
 :::
 
 ## 11. Reflect 루프
@@ -222,7 +222,7 @@ auto-reload 줄이 없으면 에이전트가 파일을 고칠 때마다 개발 �
 
 근거가 명확합니다 — **"The instructions are about the project, not the agent."** `pnpm을 써라`는 어느 에이전트가 실행하든 같습니다.
 
-이 저장소는 같은 목적을 **심볼릭 링크**로 달성하고 있습니다. 두 방식의 차이(Windows 권한, 도구 전용 내용 추가 가능 여부)는 [CLAUDE.md와 자동 메모리](../claude-code/memory.md)에 정리돼 있습니다.
+이 저장소는 같은 목적을 **심볼릭 링크**(`ln -s AGENTS.md CLAUDE.md`)로 달성하고 있습니다. 두 방식은 Claude Code 공식 문서가 나란히 권하는 것이고, 갈리는 지점은 둘입니다 — 심볼릭 링크는 **Windows에서 권한이 필요하고 도구 전용 내용을 덧붙일 수 없습니다**([How Claude remembers your project](https://code.claude.com/docs/en/memory), 확인 2026-09-05).
 
 ## 확인하지 못한 것
 
@@ -231,12 +231,6 @@ auto-reload 줄이 없으면 에이전트가 파일을 고칠 때마다 개발 �
 - **150줄·20줄 기준** — 측정 근거가 없습니다
 - **Droid에서의 동작** — 이 저장소에서 쓰지 않는 도구입니다
 - 원문은 게시일과 수정일을 밝히지만 **어느 에이전트 버전 기준인지는 없습니다.** 위 인용은 **2026-09-05 확인분**입니다
-
-## 참고
-
-- 원문: [How to Write an AGENTS.md That Actually Works](https://hboon.com/how-to-write-an-agents-md-that-actually-works/) — 2026-03-29 게시, 2026-06-13 수정, 확인 2026-09-05
-- 같은 폴더: [AGENTS.md 오픈 포맷](./spec.md)
-- 갈리는 지점 대조: [CLAUDE.md 튜닝](../claude-code/claude-md-tuning.md) · [Claude Code 베스트 프랙티스](../claude-code/best-practices.md)
 
 ---
 

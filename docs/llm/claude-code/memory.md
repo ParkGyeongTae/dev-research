@@ -8,7 +8,7 @@ sidebar_position: 2
 > **확인 날짜** 2026-09-05 — 원문에 판번호도 최종 수정일 표기도 없습니다<br/>
 > **검증 상태** 원문을 읽고 정리했고, 일부는 이 저장소에서 직접 확인했습니다(맨 아래 절).
 
-[베스트 프랙티스 문서](./best-practices.md)의 CLAUDE.md 절은 **요약본**입니다. 위치와 로드 순서, 크기 기준, `.claude/rules/`, 지시가 안 먹힐 때의 진단은 이 페이지에만 있습니다.
+같은 공식 문서군의 [Best practices](https://code.claude.com/docs/en/best-practices) 페이지에도 CLAUDE.md 절이 있지만 **요약본**입니다. 위치와 로드 순서, 크기 기준, `.claude/rules/`, 지시가 안 먹힐 때의 진단은 이 원문 페이지에만 있습니다.
 
 ## 두 가지 메커니즘
 
@@ -111,7 +111,7 @@ sidebar_position: 2
 :::info 이 저장소가 쓰고 있는 방식입니다
 > **Claude Code reads `CLAUDE.md`, not `AGENTS.md`.**
 
-이미 `AGENTS.md`를 쓰고 있다면 두 방법이 있습니다. 포맷 자체(무엇을 담고 어떤 도구가 읽는지)는 [AGENTS.md 오픈 포맷](../agents-md/spec.md)에 있습니다.
+이미 `AGENTS.md`를 쓰고 있다면 두 방법이 있습니다.
 :::
 
 **방법 1 — import (Claude 전용 지침을 덧붙일 수 있음)**
@@ -265,7 +265,7 @@ Claude가 스스로 쌓는 쪽입니다. 네 종류를 프런트매터의 `type`
 - **심볼릭 링크 방식이 동작합니다.** `CLAUDE.md -> AGENTS.md`로 걸려 있고, 링크 너머의 `AGENTS.md`가 세션 지침으로 로드되는 것을 확인했습니다
 - **자동 메모리 디렉터리가 문서 서술대로 존재합니다.** 경로는 `~/.claude/projects/<프로젝트>/memory/`이고 `<프로젝트>` 이름이 **git 저장소 경로에서 파생**된 형태였습니다. 현재는 **비어 있습니다** — `MEMORY.md`도 토픽 파일도 아직 없습니다
 - 이 저장소는 **프로젝트 스코프 하나만** 씁니다. `~/.claude/CLAUDE.md`와 `~/.claude/rules/`는 없습니다
-- 현재 `AGENTS.md`는 **149줄**로 200줄 기준 안입니다
+- 현재 `AGENTS.md`는 **155줄**로 200줄 기준 안입니다
 - 확인 환경: `claude --version` → **2.1.236 (Claude Code)**, macOS (Darwin 24.6.0)
 
 ## 읽고 든 판단
@@ -274,7 +274,7 @@ Claude가 스스로 쌓는 쪽입니다. 네 종류를 프런트매터의 `type`
 
 - **"맥락 vs 강제"가 이 페이지의 축이고, 대부분의 CLAUDE.md 실패가 이 혼동에서 옵니다.** `IMPORTANT`를 아무리 붙여도 강제가 되지 않습니다. 강제가 필요하면 훅, 관리 설정, `--allowedTools` 중 하나로 내려야 합니다.
 - **`@` import가 컨텍스트를 안 줄인다는 게 반직관적입니다.** 파일을 쪼개면 가벼워질 것 같지만 실행 시 전부 로드됩니다. 실제로 줄이는 건 `paths` 프런트매터를 가진 경로 한정 규칙뿐입니다.
-- **이 저장소는 아직 `.claude/rules/`를 쓸 이유가 없습니다.** `AGENTS.md` 149줄이면 여유가 있고, 규칙이 문서 종류별로 갈리지도 않습니다. 200줄에 가까워지면 그때 §2(주장 검증)와 §7(마무리 점검)을 규칙 파일로 빼는 게 자연스러운 첫 분할로 보입니다.
+- **이 저장소는 아직 `.claude/rules/`를 쓸 이유가 없습니다.** `AGENTS.md` 155줄이면 여유가 있고, 규칙이 문서 종류별로 갈리지도 않습니다. 200줄에 가까워지면 그때 §2(주장 검증)와 §7(마무리 점검)을 규칙 파일로 빼는 게 자연스러운 첫 분할로 보입니다.
 
 ## 확인하지 못한 것
 
@@ -284,12 +284,9 @@ Claude가 스스로 쌓는 쪽입니다. 네 종류를 프런트매터의 `type`
 - 자동 메모리가 실제로 무엇을 저장하는지 — **현재 비어 있어 관찰된 사례가 없습니다**
 - 원문에 판번호·최종 수정일이 없어 **어느 버전 기준인지 알 수 없습니다.** 본문에 `v2.1.198`·`v2.1.206`·`v2.1.213` 같은 버전 조건이 흩어져 있는 것으로 보아 자주 갱신되는 페이지입니다
 
-## 참고
+## 원문이 가리키는 관련 페이지
 
-- 원문: [How Claude remembers your project](https://code.claude.com/docs/en/memory) — 확인 2026-09-05
-- 원문이 가리키는 관련 페이지: [Hooks](https://code.claude.com/docs/en/hooks-guide) · [Skills](https://code.claude.com/docs/en/skills) · [Settings](https://code.claude.com/docs/en/settings) · [Monorepos and large repos](https://code.claude.com/docs/en/large-codebases)
-- AGENTS.md 오픈 포맷: [AGENTS.md 오픈 포맷](../agents-md/spec.md) (원문 [agents.md](https://agents.md/))
-- 같은 도구의 다른 정리: [Claude Code 베스트 프랙티스](./best-practices.md) · [CLAUDE.md 튜닝](./claude-md-tuning.md)
+[Hooks](https://code.claude.com/docs/en/hooks-guide) · [Skills](https://code.claude.com/docs/en/skills) · [Settings](https://code.claude.com/docs/en/settings) · [Monorepos and large repos](https://code.claude.com/docs/en/large-codebases) — 모두 2026-09-05 확인
 
 ---
 

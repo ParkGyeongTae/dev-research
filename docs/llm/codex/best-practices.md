@@ -165,12 +165,6 @@ MCP 서버를 붙일 조건이 네 가지로 정리돼 있습니다.
 - 루트 `AGENTS.md`와 `.codex/AGENTS.md`의 관계 — 같은 파일을 가리키는지, 별개인지 **확인 필요**
 - 원문에 판번호·최종 수정일이 없어 **어느 버전 기준인지 알 수 없습니다.**
 
-## 참고
-
-- 원문: [Best practices — Getting started with Codex](https://learn.chatgpt.com/guides/best-practices) — 확인 2026-09-05
-- 같은 주제의 다른 도구 정리: [Claude Code 베스트 프랙티스](../claude-code/best-practices.md) · [Kiro 스펙 베스트 프랙티스](../kiro/specs-best-practices.md)
-- 이 문서가 다루는 지침 파일 포맷: [AGENTS.md 오픈 포맷](../agents-md/spec.md) — Codex는 그 포맷의 공동 제안자입니다
-
 ---
 
 *작성일: 2026-09-05*

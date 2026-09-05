@@ -45,7 +45,7 @@ README와 나누는 이유를 셋으로 듭니다 — 에이전트에게 **예�
 :::warning 이 규칙은 Claude Code와 다릅니다 — 갈리는 지점입니다
 agents.md는 **가장 가까운 파일이 이긴다(wins)** 고 씁니다. 덮어쓰기 모델입니다.
 
-Claude Code의 `CLAUDE.md`는 그렇지 않습니다. 공식 문서 기준으로 작업 디렉터리와 그 위 모든 디렉터리의 파일이 **서로를 덮어쓰지 않고 전부 이어붙습니다**(루트 → 작업 디렉터리 순). 자세한 로드 규칙은 [CLAUDE.md와 자동 메모리](../claude-code/memory.md)에 있습니다.
+Claude Code의 `CLAUDE.md`는 그렇지 않습니다. 작업 디렉터리와 그 위 모든 디렉터리의 파일이 **서로를 덮어쓰지 않고 전부 이어붙습니다**(루트 → 작업 디렉터리 순) — [How Claude remembers your project](https://code.claude.com/docs/en/memory), 확인 2026-09-05.
 
 **어느 쪽이 맞느냐가 아니라, 도구마다 다르다는 것이 답입니다.** agents.md는 필수 필드도 준수 검증도 없는 관례라서, 탐색·병합 방식은 결국 각 도구의 구현이 정합니다. 중첩 `AGENTS.md`를 쓸 거라면 **쓰는 도구의 문서로 병합 방식을 따로 확인해야 합니다.**
 :::
@@ -110,7 +110,9 @@ mv AGENT.md AGENTS.md && ln -s AGENTS.md AGENT.md
 lrwxr-xr-x  CLAUDE.md -> AGENTS.md
 ```
 
-이 세션에서 링크 너머의 `AGENTS.md`가 지침으로 로드되는 것을 확인했습니다. 다만 심볼릭 링크에는 제약이 둘 있습니다(Windows 권한, 도구 전용 내용 추가 불가) — [CLAUDE.md와 자동 메모리](../claude-code/memory.md)에 정리돼 있습니다.
+이 세션에서 링크 너머의 `AGENTS.md`가 지침으로 로드되는 것을 확인했습니다.
+
+다만 심볼릭 링크에는 제약이 둘 있습니다 — **Windows에서는 관리자 권한이나 개발자 모드가 필요하고**, 링크로 묶은 이상 **도구 전용 내용을 덧붙일 수 없습니다.** 둘 다 Claude Code 공식 문서에 명시된 것입니다([How Claude remembers your project](https://code.claude.com/docs/en/memory), 확인 2026-09-05).
 :::
 
 도구별 설정도 FAQ에 있습니다.
@@ -125,7 +127,7 @@ lrwxr-xr-x  CLAUDE.md -> AGENTS.md
 ## 거버넌스와 채택 규모
 
 - OpenAI Codex · Amp · Google Jules · Cursor · Factory의 협업에서 나왔습니다
-- 현재 **Linux Foundation 산하 Agentic AI Foundation**이 관리합니다
+- 현재 **Linux Foundation 산하 [Agentic AI Foundation](https://openai.com/index/agentic-ai-foundation/)** 이 관리합니다
 - 사이트는 **"used by over 60k open-source projects"** 를 내겁니다
 
 :::note 60k라는 숫자를 어떻게 다룰 것인가
@@ -134,7 +136,7 @@ lrwxr-xr-x  CLAUDE.md -> AGENTS.md
 
 사이트가 나열하는 지원 도구는 확인 시점 기준 23개입니다 — OpenAI Codex, Google Jules, Factory, Aider, goose, opencode, Zed, Warp, VS Code, Cognition Devin, UiPath Autopilot & Coded Agents, JetBrains Junie, Amp, Cursor, RooCode, Google Gemini CLI, Kilo Code, Phoenix, Semgrep, GitHub Copilot coding agent, Ona, Cognition Windsurf, Augment Code.
 
-**Claude Code는 이 목록에 없습니다.** Claude Code는 `CLAUDE.md`를 읽지 `AGENTS.md`를 읽지 않습니다 — 공식 문서에 명시된 내용이고, 연결하는 두 방법(import, 심볼릭 링크)은 [CLAUDE.md와 자동 메모리](../claude-code/memory.md)에 있습니다.
+**Claude Code는 이 목록에 없습니다.** Claude Code 공식 문서가 **"Claude Code reads `CLAUDE.md`, not `AGENTS.md`"** 라고 명시합니다. 연결하려면 `CLAUDE.md`에서 `@AGENTS.md`로 import하거나 `ln -s AGENTS.md CLAUDE.md`로 링크를 겁니다([How Claude remembers your project](https://code.claude.com/docs/en/memory), 확인 2026-09-05).
 
 ## 경계 — 이 포맷이 해주지 않는 것
 
@@ -147,7 +149,7 @@ lrwxr-xr-x  CLAUDE.md -> AGENTS.md
 | 명령 기재 | 적으면 **실제로 실행됩니다.** 문서가 아니라 실행 대상입니다 |
 | 크기 기준 | **사이트에 없습니다.** 길이·지시 개수에 대한 권고가 전혀 없습니다 |
 
-마지막 항목이 이 사이트의 가장 큰 공백입니다. 무엇을 담을지는 말하지만 **얼마나 담으면 망가지는지는 말하지 않습니다.** 그 부분은 [AGENTS.md 작성 실무 팁](./writing-tips.md)과 [CLAUDE.md와 자동 메모리](../claude-code/memory.md) 쪽에 있습니다.
+마지막 항목이 이 사이트의 가장 큰 공백입니다. 무엇을 담을지는 말하지만 **얼마나 담으면 망가지는지는 말하지 않습니다.** 길이 권고도, 지시 개수 한계도, 파일이 커졌을 때의 증상도 없습니다.
 
 ## 읽고 든 판단
 
@@ -164,13 +166,6 @@ lrwxr-xr-x  CLAUDE.md -> AGENTS.md
 - **지원 도구 23개가 각각 어떻게 읽는지** — 탐색 순서, 병합 방식, 크기 한도를 도구별로 확인하지 않았습니다. 사이트는 도구별 동작을 명시하지 않습니다
 - **명령 자동 실행의 실제 범위** — 어떤 명령이 "relevant programmatic checks"로 판정되는지 기준이 사이트에 없고 직접 재현하지도 않았습니다
 - 사이트에 **판번호도 최종 수정일도 없습니다.** 조용히 바뀔 수 있는 페이지이므로 위 인용은 전부 **2026-09-05 확인분**입니다
-
-## 참고
-
-- 원문: [AGENTS.md](https://agents.md/) — 확인 2026-09-05
-- 거버넌스: [Agentic AI Foundation](https://openai.com/index/agentic-ai-foundation/) (Linux Foundation)
-- 같은 폴더: [AGENTS.md 작성 실무 팁](./writing-tips.md)
-- 도구별 대응: [CLAUDE.md와 자동 메모리](../claude-code/memory.md) · [Copilot 커스텀 에이전트](../github-copilot/custom-agents.md)
 
 ---
 

@@ -6,25 +6,22 @@ sidebar_position: 1
 
 > **원문** [How to write a great agents.md: Lessons from over 2,500 repositories](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/) — Matt Nigh (GitHub Blog)<br/>
 > **게시** 2025-11-19 · **최종 수정** 2025-11-25 · **확인 날짜** 2026-09-05<br/>
-> **교차 확인** 프런트매터 필드와 한도는 [docs.github.com의 Custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration)으로 확인했습니다 (확인 2026-09-05)<br/>
+> **교차 확인** 프런트매터 필드와 한도는 공식 문서 [Custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration) · [About custom agents](https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-custom-agents)로 확인했습니다 (확인 2026-09-05)<br/>
 > **검증 상태** 원문과 공식 문서를 읽고 정리했습니다. **Copilot을 직접 쓰지 않았습니다.**
 
-:::danger 먼저 — 이 글은 루트 `AGENTS.md` 표준에 대한 글이 아닙니다
-제목의 "agents.md"가 [AGENTS.md 오픈 포맷](../agents-md/spec.md)과 같은 것으로 읽히기 쉬운데, **다른 물건입니다.**
+이 글이 다루는 것은 GitHub Copilot의 **커스텀 에이전트** 기능입니다. 원문 첫 문단이 정의합니다.
 
-> We recently released a new GitHub Copilot feature: **custom agents defined in agents.md files.** Instead of one general assistant, you can now build a team of specialists.
+> We recently released a new GitHub Copilot feature: **custom agents defined in agents.md files.** Instead of one general assistant, you can now build a team of specialists: a @docs-agent for technical writing, a @test-agent for quality assurance, and a @security-agent for security analysis.
 
-| | 루트 `AGENTS.md` | 이 글의 `agents.md` |
-| --- | --- | --- |
-| 위치 | 저장소 루트 (모노레포는 패키지마다) | `.github/agents/<이름>.md` |
-| 개수 | 프로젝트당 하나(+중첩) | **에이전트마다 하나** |
-| 성격 | 프로젝트 맥락 | **에이전트 페르소나 정의** |
-| 프런트매터 | 없음 | **필수** (`description`) |
-| 호출 | 자동 로드 | `@docs-agent`처럼 **이름으로 호출** |
-| 대응물 | — | Claude Code의 `.claude/agents/*.md` 서브에이전트 |
+하나의 범용 어시스턴트 대신 **역할이 정해진 에이전트를 여러 개** 두고 이름으로 부르는 방식입니다. 파일 하나가 에이전트 하나를 정의합니다.
 
-즉 이 글의 대응물은 Claude Code의 **서브에이전트**이지 `CLAUDE.md`가 아닙니다. 그래서 이 문서는 `agents-md/`가 아니라 `github-copilot/` 아래에 있습니다.
-:::
+| | 내용 |
+| --- | --- |
+| 위치 | `.github/agents/<이름>.md` |
+| 개수 | 에이전트마다 하나 |
+| 담는 것 | 페르소나, 스택, 파일 구조, 실행 가능한 명령, 코드 예시, 경계 |
+| 프런트매터 | 필수 (`description`) |
+| 호출 | `@docs-agent`처럼 이름으로 |
 
 ## 이 글의 근거 — 그리고 근거의 한계
 
@@ -66,7 +63,7 @@ sidebar_position: 1
 :::note 이 경계는 권고이지 강제가 아닙니다
 원문은 이 점을 말하지 않지만 중요합니다. 마크다운에 적은 "🚫 Never do"는 **모델에게 전달되는 지시**일 뿐입니다. 실제로 막으려면 도구 수준의 제한이 필요합니다 — Copilot이라면 프런트매터의 `tools` 목록, Claude Code라면 훅이나 `--allowedTools`입니다.
 
-같은 혼동이 CLAUDE.md 쪽에도 있습니다: [CLAUDE.md와 자동 메모리](../claude-code/memory.md)의 "맥락이지 강제가 아니다" 절.
+권고와 강제를 구분하지 않으면, 대문자로 쓸수록 안전해진다고 착각하게 됩니다. 실제로 안전해지는 건 도구 목록을 좁혔을 때뿐입니다.
 :::
 
 ## 원문의 완성 예시
@@ -168,7 +165,7 @@ Lint markdown: `npx markdownlint docs/` (validates your work)
 
 > Start simple. Test it. **Add detail when your agent makes mistakes.** The best agent files grow through **iteration, not upfront planning.**
 
-이건 다른 자료들과 완전히 일치합니다 — 반응적으로 규칙을 쌓으라는 것([AGENTS.md 작성 실무 팁](../agents-md/writing-tips.md)), Claude가 같은 실수를 두 번째로 할 때 적으라는 것([CLAUDE.md와 자동 메모리](../claude-code/memory.md)).
+**미리 설계하지 말고 실패할 때마다 붙이라**는 것이 이 글의 마지막 권장입니다. 앞서 나온 3단 경계도, 여섯 영역도 처음부터 다 채우라는 뜻이 아닙니다.
 
 ## 경계 — 한자리에 모으면
 
@@ -185,9 +182,9 @@ Lint markdown: `npx markdownlint docs/` (validates your work)
 
 여기부터는 **원문에 있는 말이 아니라 정리하며 든 생각**입니다.
 
-- **파일명이 같아서 생기는 혼동이 실제 비용을 만듭니다.** 검색으로 "agents.md 작성법"을 찾으면 루트 표준 이야기와 Copilot 페르소나 이야기가 섞여 나옵니다. 둘은 담을 내용도, 개수도, 수명도 다릅니다.
-- **크기 권고가 없는 게 눈에 띕니다.** AGENTS.md·CLAUDE.md 쪽 자료는 전부 "짧게"를 말하는데 이 글은 안 합니다. 페르소나 파일은 **항상 로드되는 게 아니라 호출될 때만** 들어오기 때문으로 보입니다(**추측:** 원문에 근거 없음). 그렇다면 상시 로드 파일의 200줄 기준을 여기에 그대로 적용할 이유는 없습니다.
-- **이 글의 여섯 영역은 루트 AGENTS.md에도 그대로 쓸 만합니다.** 명령·테스트·구조·스타일·git·경계는 페르소나 파일에만 해당하는 목록이 아닙니다. 그래서 두 주제가 섞여 인용되는 것이기도 합니다.
+- **크기 권고가 없는 게 눈에 띕니다.** 지침 파일을 다루는 글은 대개 "짧게"를 말하는데 이 글은 하지 않습니다. 페르소나 파일은 **항상 로드되는 게 아니라 호출될 때만** 들어오기 때문으로 보입니다(**추측:** 원문에 근거 없음). 그렇다면 상시 로드되는 파일의 길이 기준을 여기에 그대로 적용할 이유는 없습니다.
+- **"명령을 쥐여주는 것"이 이 글에서 가장 실질적인 권장입니다.** 나머지(페르소나, 스택, 경계)는 무엇을 쓸지에 대한 것인데, `docs:build`와 `markdownlint`만이 에이전트가 **자기 출력을 검사할 고리**를 만듭니다. 검사가 없으면 페르소나를 아무리 잘 써도 "다 된 것 같다"에서 멈춥니다.
+- **경계를 세 단계로 나눈 것이 두 단계보다 나은 이유는 승인 비용입니다.** 전부 금지하면 에이전트가 아무것도 못 하고, 전부 허용하면 사람이 계속 지켜봐야 합니다. "먼저 물어라"가 있어야 위험한 것만 사람에게 옵니다.
 
 ## 확인하지 못한 것
 
@@ -195,13 +192,6 @@ Lint markdown: `npx markdownlint docs/` (validates your work)
 - **2,500개 분석의 어떤 부분도 재현하지 않았습니다**
 - `@docs-agent` 같은 호출 문법이 어느 인터페이스(웹·VS Code·CLI)에서 어떻게 동작하는지 — 원문이 명시하지 않고 확인하지 않았습니다
 - 원문은 게시일과 수정일을 밝히지만 **어느 Copilot 버전 기준인지는 없습니다.** 게시가 2025-11이라 **9개월 이상 지난 글**이고, 그 사이 `infer` 필드가 폐기된 것처럼 사양이 움직였습니다
-
-## 참고
-
-- 원문: [How to write a great agents.md](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/) — 2025-11-19 게시, 2025-11-25 수정, 확인 2026-09-05
-- 공식 사양: [Custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration) · [About custom agents](https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-custom-agents) — 확인 2026-09-05
-- 헷갈리기 쉬운 다른 것: [AGENTS.md 오픈 포맷](../agents-md/spec.md)
-- 대응하는 Claude Code 기능: [Claude Code 베스트 프랙티스](../claude-code/best-practices.md)의 서브에이전트 절
 
 ---
 

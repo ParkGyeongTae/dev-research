@@ -16,7 +16,7 @@ Tembo는 **클라우드에서 코딩 에이전트를 돌리는 제품을 파는 
 근거의 성격: 저자가 대는 유일한 권위는 **"Tembo를 만들며 1년간 이 파일들을 튜닝한 경험"** 입니다. 측정 데이터도, 인용된 논문·문서도 없습니다.
 :::
 
-이 문서는 [Claude Code 베스트 프랙티스](./best-practices.md)와 [CLAUDE.md와 자동 메모리](./memory.md)를 읽었다는 전제로 씁니다. **겹치는 내용은 반복하지 않고, 원문이 공식 문서와 다르게 말하는 것과 공식 문서에 없는 것만** 다룹니다.
+이 글의 값어치는 일반론이 아니라 **Claude Code 공식 문서와 어긋나는 지점**에 있습니다. 그래서 이 문서는 겹치는 일반론을 옮기지 않고, **공식 문서와 갈리는 것**과 **공식 문서에 없는 것**만 다룹니다. 대조한 공식 문서는 [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)와 [How Claude remembers your project](https://code.claude.com/docs/en/memory)이고, 둘 다 2026-09-05에 확인했습니다.
 
 ---
 
@@ -89,7 +89,7 @@ fix them according to the linter output rather than trying to predict style rule
 > **The linter is the source of truth, not the CLAUDE.md file.**
 
 :::warning 공식 문서와 정면으로 갈립니다
-Claude Code 공식 문서의 "넣을 것" 표 두 번째 줄이 **"기본값과 다른 코드 스타일 규칙"** 입니다. [AGENTS.md 작성 실무 팁](../agents-md/writing-tips.md)의 저자도 스타일 규칙을 구체적으로 적는 쪽입니다.
+Claude Code 공식 문서의 "넣을 것" 표 두 번째 줄이 **"기본값과 다른 코드 스타일 규칙"** 입니다. 즉 공식은 이 파일에 스타일 규칙을 **적으라**고 합니다.
 
 **조건을 나누면 갈리지 않습니다.**
 
@@ -117,7 +117,9 @@ Claude Code 공식 문서의 "넣을 것" 표 두 번째 줄이 **"기본값과 
 일부러 벗어날 때는 명시하라고 합니다 — "이 프로토타입에서는 CLAUDE.md의 에러 처리 패턴을 무시하고 기본 try-catch를 써라".
 
 :::note 공식 문서의 설명과 층이 다릅니다
-공식 문서는 같은 현상을 **메커니즘**으로 설명합니다 — CLAUDE.md는 시스템 프롬프트가 아니라 **시스템 프롬프트 뒤의 사용자 메시지**로 전달되므로 엄격한 준수가 보장되지 않는다는 것([CLAUDE.md와 자동 메모리](./memory.md)).
+공식 문서는 같은 현상을 **메커니즘**으로 설명합니다 — CLAUDE.md는 시스템 프롬프트가 아니라 **시스템 프롬프트 뒤의 사용자 메시지**로 전달되므로 엄격한 준수가 보장되지 않는다는 것입니다.
+
+> CLAUDE.md content is delivered as a user message after the system prompt, not as part of the system prompt itself.
 
 이 글은 같은 것을 **증상과 대처**로 설명합니다. 둘이 모순되지 않고 층이 다릅니다. 지시가 안 먹힐 때 공식 문서의 6단계 진단을 돌리기 전에, **"최근 대화에서 내가 뒤집는 말을 했나"부터 보는 게 빠릅니다.**
 :::
@@ -168,7 +170,7 @@ Before starting work, determine which context files are relevant and read them.
 | 확실성 | 없음. 안 읽고 진행할 수 있음 | 매칭되는 파일을 읽을 때 자동 |
 | 실패 모드 | 조용히 맥락 없이 작업 | — |
 
-`.claude/rules/`에 `paths` 프런트매터를 붙이면 **매칭되는 파일을 다룰 때만** 로드됩니다 — 사람도 모델도 개입하지 않습니다([CLAUDE.md와 자동 메모리](./memory.md)).
+공식 문서의 `.claude/rules/`는 규칙 파일에 `paths` 프런트매터를 붙일 수 있고, 그러면 **매칭되는 파일을 다룰 때만** 로드됩니다 — 사람도 모델도 개입하지 않습니다.
 
 이 글이 게시된 2026-02-04 시점에 `.claude/rules/`가 있었는지는 확인하지 못했습니다. 다만 **지금 고른다면 `paths` 규칙이 낫습니다.** "관련 있으면 읽어라"는 지시도 결국 권고이고, 안 읽었다는 사실이 티가 나지 않습니다.
 
@@ -206,12 +208,6 @@ Before starting work, determine which context files are relevant and read them.
 - **`file:line` 포인터가 실제로 낫다는 주장** — 돌려보지 않았습니다. 위의 "줄 번호가 썩는다"는 **판단**이지 실험 결과가 아닙니다
 - **2026-02-04 시점의 Claude Code 기능 범위** — `.claude/rules/`와 `paths` 프런트매터가 그때 있었는지 확인하지 못했습니다. 그래서 원문의 `.claude/*.md` 방식이 **당시 최선이었을 가능성**을 배제할 수 없습니다
 - 원문은 게시일을 밝히지만 **어느 Claude Code 버전 기준인지는 없습니다.** 확인 시점 기준 **7개월 지난 글**입니다
-
-## 참고
-
-- 원문: [How to Write a Great CLAUDE.md](https://www.tembo.io/blog/how-to-write-a-great-claude-md) — 2026-02-04 게시, 확인 2026-09-05
-- 같은 도구의 공식 정리: [Claude Code 베스트 프랙티스](./best-practices.md) · [CLAUDE.md와 자동 메모리](./memory.md)
-- 갈리는 지점 대조: [AGENTS.md 작성 실무 팁](../agents-md/writing-tips.md)
 
 ---
 

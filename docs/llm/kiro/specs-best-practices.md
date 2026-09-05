@@ -5,7 +5,7 @@ sidebar_position: 1
 # Kiro 스펙 베스트 프랙티스
 
 > **원문** [Best practices](https://kiro.dev/docs/specs/best-practices/) (kiro.dev/docs/specs/best-practices/)<br/>
-> **원문 최종 수정** August 4, 2026 — 세 문서 중 유일하게 날짜 표기가 있습니다<br/>
+> **원문 최종 수정** August 4, 2026 — 판번호는 없고 날짜만 밝힙니다<br/>
 > **확인 날짜** 2026-09-05<br/>
 > **검증 상태** 원문을 읽고 정리한 문서입니다. **Kiro를 직접 써보지 않았습니다** — 동작을 재현해 확인한 것은 하나도 없습니다.
 
@@ -174,11 +174,6 @@ vibe 대화 중에 `Generate spec`이라고 하면 그 맥락을 바탕으로 �
 - UI 요소 이름(**Refine**, **Sync Files**, **Run all Tasks**, **Analyze Requirements**)이 현재 버전과 맞는지 확인하지 않았습니다. 원문 내비게이션에 `IDE 1.x`·`CLI 3.0`·`2.x reference` 같은 버전 문서가 보였는데, **이 페이지가 어느 버전 기준인지는 밝혀져 있지 않습니다.**
 - 속성 기반 테스트를 실제로 어떤 형태로 생성하는지 — 원문에 결과물 예시가 없습니다
 - Kiro CLI에서 위 기능이 IDE와 동일하게 동작하는지 — 이 페이지는 인터페이스를 구분하지 않습니다
-
-## 참고
-
-- 원문: [Best practices — Kiro Specs](https://kiro.dev/docs/specs/best-practices/) — 최종 수정 2026-08-04, 확인 2026-09-05
-- 같은 주제의 다른 도구 정리: [Claude Code 베스트 프랙티스](../claude-code/best-practices.md) · [Codex 베스트 프랙티스](../codex/best-practices.md)
 
 ---
 
