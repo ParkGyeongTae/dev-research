@@ -54,6 +54,7 @@ sidebar_position: 1
 | 문서 | 원문 | 검증 상태 |
 | --- | --- | --- |
 | [Claude Code 베스트 프랙티스](./claude-code/best-practices.md) | [code.claude.com](https://code.claude.com/docs/en/best-practices) | 원문 정리 + 일부 직접 확인 |
+| [CLAUDE.md와 자동 메모리](./claude-code/memory.md) | [code.claude.com](https://code.claude.com/docs/en/memory) | 원문 정리 + 일부 직접 확인 |
 | [Codex 베스트 프랙티스](./codex/best-practices.md) | [learn.chatgpt.com](https://learn.chatgpt.com/guides/best-practices) | 원문 정리 — **미사용** |
 | [Kiro 스펙 베스트 프랙티스](./kiro/specs-best-practices.md) | [kiro.dev](https://kiro.dev/docs/specs/best-practices/) | 원문 정리 — **미사용** |
 
