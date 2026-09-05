@@ -4,8 +4,8 @@ sidebar_position: 1
 
 # Claude Code 베스트 프랙티스
 
-> **원문** [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) (code.claude.com/docs/en/best-practices)
-> **확인 날짜** 2026-09-05 — 원문에 판번호도 최종 수정일 표기도 없습니다
+> **원문** [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) (code.claude.com/docs/en/best-practices)<br/>
+> **확인 날짜** 2026-09-05 — 원문에 판번호도 최종 수정일 표기도 없습니다<br/>
 > **검증 상태** 원문을 읽고 정리한 문서입니다. 직접 확인한 것은 그렇게 표시했고, 나머지는 **원문에서 읽은 것**입니다.
 
 ## 이 문서 전체를 지배하는 전제 하나

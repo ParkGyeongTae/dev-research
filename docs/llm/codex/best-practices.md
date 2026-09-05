@@ -4,9 +4,9 @@ sidebar_position: 1
 
 # Codex 베스트 프랙티스
 
-> **원문** [Best practices](https://learn.chatgpt.com/guides/best-practices) (learn.chatgpt.com/guides/best-practices)
-> 부제 *"Getting started with Codex and proven practices for better results"*
-> **확인 날짜** 2026-09-05 — 원문에 판번호도 최종 수정일 표기도 없습니다
+> **원문** [Best practices](https://learn.chatgpt.com/guides/best-practices) (learn.chatgpt.com/guides/best-practices)<br/>
+> 부제 *"Getting started with Codex and proven practices for better results"*<br/>
+> **확인 날짜** 2026-09-05 — 원문에 판번호도 최종 수정일 표기도 없습니다<br/>
 > **검증 상태** 원문을 읽고 정리한 문서입니다. **Codex를 직접 써보지 않았습니다** — 아래 내용은 전부 원문에서 읽은 것이고, 동작을 재현해 확인한 것은 하나도 없습니다.
 
 :::warning 이 문서의 정확도 한계

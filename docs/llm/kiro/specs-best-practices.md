@@ -4,9 +4,9 @@ sidebar_position: 1
 
 # Kiro 스펙 베스트 프랙티스
 
-> **원문** [Best practices](https://kiro.dev/docs/specs/best-practices/) (kiro.dev/docs/specs/best-practices/)
-> **원문 최종 수정** August 4, 2026 — 세 문서 중 유일하게 날짜 표기가 있습니다
-> **확인 날짜** 2026-09-05
+> **원문** [Best practices](https://kiro.dev/docs/specs/best-practices/) (kiro.dev/docs/specs/best-practices/)<br/>
+> **원문 최종 수정** August 4, 2026 — 세 문서 중 유일하게 날짜 표기가 있습니다<br/>
+> **확인 날짜** 2026-09-05<br/>
 > **검증 상태** 원문을 읽고 정리한 문서입니다. **Kiro를 직접 써보지 않았습니다** — 동작을 재현해 확인한 것은 하나도 없습니다.
 
 :::info 이 문서의 범위 — 도구 전반이 아닙니다

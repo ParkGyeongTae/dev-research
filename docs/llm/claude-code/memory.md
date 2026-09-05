@@ -4,8 +4,8 @@ sidebar_position: 2
 
 # CLAUDE.md와 자동 메모리
 
-> **원문** [How Claude remembers your project](https://code.claude.com/docs/en/memory) (code.claude.com/docs/en/memory)
-> **확인 날짜** 2026-09-05 — 원문에 판번호도 최종 수정일 표기도 없습니다
+> **원문** [How Claude remembers your project](https://code.claude.com/docs/en/memory) (code.claude.com/docs/en/memory)<br/>
+> **확인 날짜** 2026-09-05 — 원문에 판번호도 최종 수정일 표기도 없습니다<br/>
 > **검증 상태** 원문을 읽고 정리했고, 일부는 이 저장소에서 직접 확인했습니다(맨 아래 절).
 
 [베스트 프랙티스 문서](./best-practices.md)의 CLAUDE.md 절은 **요약본**입니다. 위치와 로드 순서, 크기 기준, `.claude/rules/`, 지시가 안 먹힐 때의 진단은 이 페이지에만 있습니다.
