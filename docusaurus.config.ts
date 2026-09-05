@@ -2,13 +2,17 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import { themes as prismThemes } from 'prism-react-renderer';
 
+// sitemap의 ignorePatterns가 baseUrl이 붙은 라우트 경로와 대조되므로,
+// 두 곳이 어긋나지 않게 한 곳에서 정의한다.
+const baseUrl = '/dev-research/';
+
 const config: Config = {
   title: '개발 리서치 노트',
   tagline: '데이터 엔지니어링·개발 전반 학습 리서치 정리',
   favicon: 'img/favicon.svg',
 
   url: 'https://parkgyeongtae.github.io',
-  baseUrl: '/dev-research/',
+  baseUrl,
   organizationName: 'ParkGyeongTae',
   projectName: 'dev-research',
   trailingSlash: false,
@@ -47,6 +51,12 @@ const config: Config = {
           showLastUpdateTime: true,
         },
         blog: false,
+        sitemap: {
+          // 로컬 검색 결과 페이지는 색인될 내용이 없다. 넣어두면 서치 콘솔에
+          // "크롤링됨 - 현재 색인이 생성되지 않음"으로만 쌓인다.
+          // 패턴은 baseUrl이 붙은 실제 라우트 경로와 대조된다(/dev-research/search).
+          ignorePatterns: [`${baseUrl}search`],
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
