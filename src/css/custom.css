@@ -1,0 +1,40 @@
+/* 한국어 본문 가독성 조정 — 기본 테마는 라틴 문자 기준으로 잡혀 있다. */
+:root {
+  --ifm-color-primary: #009485;
+  --ifm-color-primary-dark: #008577;
+  --ifm-color-primary-darker: #007e70;
+  --ifm-color-primary-darkest: #00685c;
+  --ifm-color-primary-light: #00a393;
+  --ifm-color-primary-lighter: #00aa9a;
+  --ifm-color-primary-lightest: #00c0ae;
+  --ifm-code-font-size: 92%;
+  --ifm-font-family-base: 'Pretendard', -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+  --ifm-line-height-base: 1.75;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #4ddbcb;
+  --ifm-color-primary-dark: #35d6c4;
+  --ifm-color-primary-darker: #29d3c0;
+  --ifm-color-primary-darkest: #21ada0;
+  --ifm-color-primary-light: #65e0d2;
+  --ifm-color-primary-lighter: #71e2d6;
+  --ifm-color-primary-lightest: #96e9e0;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* 한국어는 단어 중간에서 줄바꿈되면 읽기 나빠진다. */
+.markdown p,
+.markdown li {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 표가 좁은 화면에서 페이지 전체를 밀지 않도록 */
+.markdown table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}

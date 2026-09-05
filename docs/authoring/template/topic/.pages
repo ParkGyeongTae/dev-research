@@ -1,9 +1,0 @@
-nav:
-  - 00_summary.md
-  - 01_overview.md
-  - 02_architecture.md
-  - 03_concepts.md
-  - 04_hands-on.md
-  - 05_operations.md
-  - 06_pitfalls.md
-  - 07_references.md
