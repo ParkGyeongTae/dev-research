@@ -17,7 +17,7 @@
 - `docs/llm/` — LLM: LLM API를 부르고 다루는 법 (프롬프트 설계, 툴 사용, 평가, RAG)
 
 각 대분류의 `index.md`에 **다루는 것**과 **경계**(어느 대분류에 넣을지 헷갈릴 때의 기준), 그리고 문서 목록이 있습니다.
-기술 폴더 안은 `00_summary` ~ `07_references`의 정해진 순서를 따르되, **채울 수 있는 파일만** 만듭니다.
+기술 폴더 안에는 **답이 나온 문서만** 둡니다. 정해진 파일 세트는 없고, 파일명이 그 문서가 답하는 질문을 드러냅니다 — 공식 문서 한 페이지를 정리한 것이면 원문 slug를 그대로 씁니다(`llm/claude-code/best-practices.md`).
 
 - `docusaurus.config.ts` · `sidebars.ts` — 사이트 설정과 사이드바(폴더 구조에서 자동 생성). 카테고리 이름·순서는 각 폴더의 `_category_.json`
 - `.github/workflows/deploy.yml` — `main`에 푸시하면 빌드 결과를 GitHub Pages로 자동 배포
