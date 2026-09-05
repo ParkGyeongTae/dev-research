@@ -54,6 +54,9 @@
 - **파일명은 그 문서가 답하는 것**을 소문자 영문 + 하이픈으로 쓴다: `best-practices.md`, `context-window.md`
 - **공식 문서 한 페이지를 정리한 문서는 원문 slug를 그대로** 파일명으로 쓴다 — 어느 원문에 대응하는지 파일명만 보고 알 수 있어야 한다.
   예: `code.claude.com/docs/en/best-practices` → `docs/llm/claude-code/best-practices.md`
+  마지막 조각만으로 무엇에 대한 문서인지 모호하면 **구분에 필요한 만큼 앞 조각을 붙인다.**
+  예: `kiro.dev/docs/specs/best-practices/` → `docs/llm/kiro/specs-best-practices.md`
+  (도구 전반이 아니라 specs 기능에 대한 문서라는 게 파일명에서 드러나야 한다)
 - **문서 하나는 질문 하나에 답한다.** 여러 질문이 섞이면 파일을 나눈다.
 - 폴더 안 순서를 정하고 싶으면 프런트매터의 `sidebar_position`을 쓴다. **파일명에 번호를 붙이지 않는다.**
 
