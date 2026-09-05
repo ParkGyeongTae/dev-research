@@ -6,20 +6,23 @@
 
 ## 구성
 
-문서는 성격에 따라 세 곳으로 나뉩니다. 어디에 둘지 판단하는 기준은 [`authoring-guide.md`](./docs/authoring/authoring-guide.md) §1이 마스터입니다.
+문서는 **일곱 개의 대분류** 아래에 기술별로 쌓입니다. 기술 하나가 폴더 하나이고, 경로는 `docs/<대분류>/<기술>/`입니다.
 
-- `docs/topics/` — 기술 하나를 깊이 판 문서 묶음. 기술 하나가 폴더 하나이고, `00_summary` ~ `07_references`의 정해진 파일 세트를 채웁니다
-- `docs/notes/` — 문제 하나를 문서 한 장으로 끝낸 기록. 연도별로 쌓입니다
-- `docs/concepts/` — 제품에 종속되지 않는 이론. 두 곳 이상에서 인용될 때만 여기로 올라옵니다
-- `docs/authoring/` — 이 저장소의 문서를 만드는 규칙과 기술 문서 템플릿
+- `docs/backend/` — 백엔드: 애플리케이션 서버·API·런타임
+- `docs/frontend/` — 프론트엔드: 브라우저에서 도는 것
+- `docs/data-engineering/` — 데이터 엔지니어링: 스트리밍·배치·오케스트레이션·저장 포맷
+- `docs/data-analytics/` — 데이터 분석: 분석용 변환·라이브러리·지표
+- `docs/infrastructure/` — 인프라: 컨테이너·클라우드·IaC·관측성
+- `docs/database/` — 데이터베이스: 저장 엔진의 내부 동작과 튜닝
+- `docs/llm/` — LLM: LLM API를 부르고 다루는 법 (프롬프트 설계, 툴 사용, 평가, RAG)
+
+각 대분류의 `index.md`에 **다루는 것**과 **경계**(어느 대분류에 넣을지 헷갈릴 때의 기준), 그리고 문서 목록이 있습니다.
+기술 폴더 안은 `00_summary` ~ `07_references`의 정해진 순서를 따르되, **채울 수 있는 파일만** 만듭니다.
+
 - `docusaurus.config.ts` · `sidebars.ts` — 사이트 설정과 사이드바(폴더 구조에서 자동 생성). 카테고리 이름·순서는 각 폴더의 `_category_.json`
 - `.github/workflows/deploy.yml` — `main`에 푸시하면 빌드 결과를 GitHub Pages로 자동 배포
 
-작성 규칙은 `docs/authoring/`에 두고 사이트와 함께 발행합니다 — 어떤 규칙으로 이 문서들이 만들어졌는지 사이트에서 바로 읽기 위해서입니다.
-
-에이전트 지침만 저장소 루트에 남습니다 — 세션 시작 시 루트에서 읽히는 파일이기 때문입니다.
-
-- [`AGENTS.md`](./AGENTS.md) — AI 에이전트(Claude Code 등) 작업 지침 (`CLAUDE.md`는 이 파일의 심볼릭 링크)
+문서 구조·명명 규칙·작성 규칙의 **마스터는 저장소 루트의 [`AGENTS.md`](./AGENTS.md)** 하나입니다 (`CLAUDE.md`는 이 파일의 심볼릭 링크). AI 에이전트 지침과 작성 규칙을 한 파일에 두어, 규칙이 두 곳으로 갈라지지 않게 했습니다.
 
 ## 로컬에서 실행
 

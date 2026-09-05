@@ -74,10 +74,22 @@ const config: Config = {
     navbar: {
       title: '개발 리서치 노트',
       items: [
-        { to: '/topics/', label: '기술 리서치', position: 'left' },
-        { to: '/notes/', label: '단편 노트', position: 'left' },
-        { to: '/concepts/', label: '개념 정리', position: 'left' },
-        { to: '/authoring/authoring-guide', label: '작성 규칙', position: 'left' },
+        // 대분류가 늘어나도 navbar가 넘치지 않도록 드롭다운 하나로 묶는다.
+        // 순서는 각 폴더 `_category_.json`의 position과 맞춘다.
+        {
+          type: 'dropdown',
+          label: '분류',
+          position: 'left',
+          items: [
+            { to: '/backend/', label: '백엔드' },
+            { to: '/frontend/', label: '프론트엔드' },
+            { to: '/data-engineering/', label: '데이터 엔지니어링' },
+            { to: '/data-analytics/', label: '데이터 분석' },
+            { to: '/infrastructure/', label: '인프라' },
+            { to: '/database/', label: '데이터베이스' },
+            { to: '/llm/', label: 'LLM' },
+          ],
+        },
         {
           href: 'https://github.com/ParkGyeongTae/dev-research',
           label: 'GitHub',
