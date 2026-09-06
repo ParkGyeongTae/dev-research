@@ -157,11 +157,14 @@ zsh    -> 지원
 | --- | --- |
 | `[[ ... ]]` | `[ ... ]` (test) |
 | 배열 `arr=(...)`, `${arr[@]}` | 위치 인자 `set -- ...`, `"$@"` |
-| `declare` / `local` | `local`은 POSIX가 아니지만 널리 지원됨 |
+| `declare` / `local` | 규격이 **결과 미정의**로 남긴 이름 — 널리 지원되지만 보장은 없음 |
 | `${var^^}`, `${var,,}` | `tr` 등 외부 명령 |
 | `source file` | `. file` |
 | `function name() {}` | `name() {}` |
 | `$'...'` (ANSI-C 인용) | `printf` |
+
+`declare`·`local`·`typeset`은 "규격에 아예 없는 것"과는 다릅니다. 규격이 이 이름들을 표로 나열해 두고 **"the results are unspecified"**라고 못 박은 것이므로, 여러 구현에서 똑같이 동작하더라도 그건 구현끼리의 우연입니다.
+— [The Open Group Base Specifications Issue 8, Shell Command Language, 2.9.1.4 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) (확인: 2026-09-06)
 
 ---
 

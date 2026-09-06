@@ -132,7 +132,15 @@ $ /bin/dash -c '[ 1 -eq 1 -a 2 -eq 2 ] && echo "test -a ok"'
 test -a ok
 ```
 
-**그래서 `local`이 dash에서 돈다고 해서 그 스크립트가 POSIX인 것은 아닙니다.** `local`은 POSIX에 없습니다. Debian 밖의 다른 `sh` 구현에서는 보장되지 않습니다.
+**그래서 `local`이 dash에서 돈다고 해서 그 스크립트가 POSIX인 것은 아닙니다.** 규격은 `local`을 유틸리티로 정의하지 않고, **결과가 미정의(unspecified)인 이름 목록에 올려 둡니다.**
+
+> If the command name matches the name of a utility listed in the following table, the results are unspecified.
+
+이 표에 `local`이 `declare`·`typeset` 등과 함께 들어 있습니다. Issue 7·Issue 8 양쪽 다 같습니다.
+— [The Open Group Base Specifications Issue 7 (POSIX.1-2017), Shell Command Language, 2.9.1 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) (확인: 2026-09-06)
+— [The Open Group Base Specifications Issue 8 (POSIX.1-2024), Shell Command Language, 2.9.1.4 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) (확인: 2026-09-06)
+
+즉 dash에서 도는 것은 Debian Policy가 요구했기 때문이지 규격의 보장이 아닙니다. Debian 밖의 다른 `sh` 구현에서는 보장되지 않습니다.
 
 또 하나. Policy가 `echo -n`을 요구한다는 점이 맥에서 역방향으로 물립니다.
 
