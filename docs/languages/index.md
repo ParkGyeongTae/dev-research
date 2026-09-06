@@ -30,37 +30,6 @@ sidebar_position: 1
   - **특정 셸의 생태계 도구**(Oh My Zsh 등)는 그 셸 폴더 안의 문서로 둡니다 — npm·nvm이 `backend/nodejs/` 폴더 안에 있는 것과 같은 방식입니다.
 - **언어 위에 얹힌 패키지 관리자·버전 관리 도구**(npm, nvm, pip 등)는 그 도구가 속한 생태계의 도메인 대분류로 갑니다. 언어 명세와 무관하게 바뀌기 때문입니다.
 
-## 문서 목록
-
-### sh (POSIX 셸) — `sh/`
-
-- [sh란 무엇인가 — 이식성의 기준선](./sh/what-is-posix-shell.md)
-
-### Bash — `bash/`
-
-- [Bash란 무엇인가 — 맥에 깔린 것은 2006년 판입니다](./bash/what-is-bash.md)
-
-### zsh — `zsh/`
-
-- [zsh란 무엇인가 — 스크립트가 조용히 달라지는 지점](./zsh/what-is-zsh.md)
-- [Oh My Zsh란 무엇인가 — 느린 셸의 범인은 대개 이것이 아닙니다](./zsh/oh-my-zsh.md)
-
-### Java — `java/`
-
-- [Java란 무엇인가 — 언어와 JVM은 서로 다른 명세다](./java/what-is-java.md)
-
-### Python — `python/`
-
-- [Python이란 무엇인가 — 타입 힌트와 GIL을 오해하지 않기](./python/what-is-python.md)
-
-### JavaScript — `javascript/`
-
-- [JavaScript란 무엇인가 — 명세에는 입출력도 브라우저도 없다](./javascript/what-is-javascript.md)
-
-### TypeScript — `typescript/`
-
-- [TypeScript란 무엇인가 — 타입은 컴파일 후 사라진다](./typescript/what-is-typescript.md)
-
 ---
 
 *작성일: 2026-09-06*

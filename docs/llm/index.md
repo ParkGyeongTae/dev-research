@@ -54,33 +54,10 @@ sidebar_position: 1
 
 1. **버전 번호가 없습니다.** 벤더의 best practice 페이지는 판번호 없이 조용히 바뀌고 URL도 옮겨다닙니다. 그래서 버전 대신 **원문 URL · 문서 제목 · 확인 날짜** 세 개를 항상 함께 적습니다. 벤더 문서 넷 중 최종 수정일을 밝힌 것은 Kiro 하나뿐이었고, 반대로 개인·기업 블로그 글은 셋 다 게시일을 밝혔습니다 — **날짜가 있다고 최신인 것도, 없다고 낡은 것도 아닙니다.**
 2. **원문의 경계를 빠뜨리기 쉽습니다.** 벤더 문서라고 권장사항만 있는 것은 아닙니다 — 실제로 세 문서 모두 "언제 쓰지 마라"를 담고 있었고, 오히려 **거기가 가장 옮길 값어치가 있는 부분**이었습니다. 권장만 옮기고 경계를 흘리면 절반짜리 정리가 됩니다.
-3. **직접 써보지 않았다면 그렇게 적습니다.** 원문에서 읽은 것과 돌려본 것을 섞지 않습니다. 안 써본 도구의 문서는 "확인하지 못한 것"을 문서 안에 남깁니다.
+3. **직접 써보지 않았다면 그렇게 적습니다.** 원문에서 읽은 것과 돌려본 것을 섞지 않습니다. 이 대분류의 문서 대부분은 도구를 실제로 써 본 기록이 아니라 원문을 읽고 정리한 것입니다. 각 문서 맨 위 헤더에 **원문 URL · 확인 날짜 · 검증 상태**를, 맨 아래 "확인하지 못한 것"에 무엇을 검증하지 않았는지 남깁니다 — 그 표기가 없는 문서는 이 대분류에서 신뢰하지 않습니다.
 4. **블로그 글은 숫자부터 의심합니다.** 이 영역의 글들은 "150줄 이하", "500줄", "지시 200개" 같은 기준을 던지는데 **확인해 본 것 중 근거를 댄 것이 하나도 없었습니다.** 근거 없는 수치는 그렇게 표시하고, 대신 재현 가능한 **증상 기준**(규칙이 있는데도 계속 어긴다면 파일이 너무 긴 것)을 우선합니다.
-
-## 문서 목록
-
-### 에이전틱 코딩 도구
-
-| 문서 | 원문 | 출처 등급 | 검증 상태 |
-| --- | --- | --- | --- |
-| [Claude Code 베스트 프랙티스](./claude-code/best-practices.md) | [code.claude.com](https://code.claude.com/docs/en/best-practices) | 공식 | 원문 정리 + 일부 직접 확인 |
-| [CLAUDE.md와 자동 메모리](./claude-code/memory.md) | [code.claude.com](https://code.claude.com/docs/en/memory) | 공식 | 원문 정리 + 일부 직접 확인 |
-| [CLAUDE.md 튜닝](./claude-code/claude-md-tuning.md) | [tembo.io](https://www.tembo.io/blog/how-to-write-a-great-claude-md) | 벤더 블로그 | 원문 정리 — **미실행** |
-| [Codex 베스트 프랙티스](./codex/best-practices.md) | [learn.chatgpt.com](https://learn.chatgpt.com/guides/best-practices) | 공식 | 원문 정리 — **미사용** |
-| [Kiro 스펙 베스트 프랙티스](./kiro/specs-best-practices.md) | [kiro.dev](https://kiro.dev/docs/specs/best-practices/) | 공식 | 원문 정리 — **미사용** |
-| [Copilot 커스텀 에이전트](./github-copilot/custom-agents.md) | [github.blog](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/) | 벤더 블로그 + 공식 레퍼런스 교차 확인 | 원문 정리 — **미사용** |
-
-### 지침 파일 포맷
-
-| 문서 | 원문 | 출처 등급 | 검증 상태 |
-| --- | --- | --- | --- |
-| [AGENTS.md 오픈 포맷](./agents-md/spec.md) | [agents.md](https://agents.md/) | 표준 사이트 | 원문 정리 + 일부 직접 확인 |
-| [AGENTS.md 작성 실무 팁](./agents-md/writing-tips.md) | [hboon.com](https://hboon.com/how-to-write-an-agents-md-that-actually-works/) | 개인 블로그 | 원문 정리 — **미실행** |
-
-**어느 문서도 해당 도구를 실제로 돌려본 기록이 아닙니다.** 전부 원문을 읽고 정리한 것입니다. "일부 직접 확인"은 이 저장소에서 관찰 가능한 것(심볼릭 링크가 로드되는지, `AGENTS.md`가 몇 줄인지, 자동 메모리 디렉터리가 존재하는지)에 한합니다. 각 문서 맨 아래 "확인하지 못한 것"에 무엇을 검증하지 않았는지 적어 두었습니다.
-
-출처 등급이 낮은 문서(개인 블로그·벤더 블로그)는 **공식 문서와 갈리는 지점을 표시하는 용도**로 둡니다. 그 자체를 근거로 쓰지 않습니다.
+5. **출처 등급이 낮은 자료**(개인 블로그·벤더 블로그)는 **공식 문서와 갈리는 지점을 표시하는 용도**로만 씁니다. 그 자체를 근거로 삼지 않습니다.
 
 ---
 
-*작성일: 2026-09-05*
+*작성일: 2026-09-06*
