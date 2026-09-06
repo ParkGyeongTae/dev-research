@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 6
 ---
 
 # 데이터 엔지니어는 실무에서 Node.js를 어디서 만나는가

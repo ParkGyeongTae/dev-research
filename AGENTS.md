@@ -24,12 +24,13 @@
 
 ### 1.1 어디에 둘 것인가
 
-문서는 **일곱 개의 대분류** 아래에 기술별로 쌓인다. `docs/<대분류>/<기술>/` 이 기본 단위다.
+문서는 **여덟 개의 대분류** 아래에 기술별로 쌓인다. `docs/<대분류>/<기술>/` 이 기본 단위다.
 
 | 폴더 | 사이드바 표기 | 다루는 것 |
 | --- | --- | --- |
+| `docs/languages/` | 언어 | 프로그래밍 언어 자체 — 정의·실행 모델·타입 시스템·사용 영역 (Java, Python, JavaScript, TypeScript …) |
 | `docs/backend/` | 백엔드 | 애플리케이션 서버·API·런타임 (Spring, FastAPI, JVM, gRPC …) |
-| `docs/frontend/` | 프론트엔드 | 브라우저에서 도는 것 (React, TypeScript, 번들러 …) |
+| `docs/frontend/` | 프론트엔드 | 브라우저에서 도는 것 (React, 번들러, 브라우저 렌더링 …) |
 | `docs/data-engineering/` | 데이터 엔지니어링 | 스트리밍·배치·오케스트레이션·저장 포맷 (Kafka, Spark, Airflow, Iceberg …) |
 | `docs/data-analytics/` | 데이터 분석 | 분석용 변환·라이브러리·지표 (dbt, pandas, BI …) |
 | `docs/infrastructure/` | 인프라 | 컨테이너·클라우드·IaC·관측성 (Kubernetes, Terraform, Prometheus …) |

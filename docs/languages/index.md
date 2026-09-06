@@ -1,0 +1,51 @@
+---
+sidebar_position: 1
+---
+
+# 언어
+
+**프로그래밍 언어 자체**를 다룹니다. 그 언어로 무엇을 만드는가가 아니라, 언어가 무엇이고 어떻게 실행되며 실무에서 어디에 쓰이는가입니다.
+
+## 다루는 것
+
+- 언어의 정의와 표준 — 무엇이 명세이고, 누가 정하는가
+- 실행 모델 — 컴파일되는가 해석되는가, 그 사이에 무엇이 있는가
+- 타입 시스템 — 언제 검사하고, 무엇을 보장하지 **않는가**
+- 버전과 릴리스 정책 — 지금 무엇을 쓰는 것이 맞는가
+- 실무에서 쓰이는 영역
+
+## 경계
+
+다른 대분류가 **도메인**(어디에 쓰이는가) 기준인 것과 달리, 여기는 **재료**(무엇으로 쓰는가) 기준입니다. 그래서 경계를 분명히 해 둡니다.
+
+- **언어 자체는 여기, 그 언어로 만들어진 런타임·프레임워크·라이브러리는 도메인 대분류로** 갑니다.
+  - JavaScript라는 언어 → `languages/javascript/`
+  - Node.js라는 런타임 → `backend/nodejs/`
+  - Java라는 언어 → `languages/java/`
+  - Spring이라는 프레임워크 → `backend/`
+  - Python이라는 언어 → `languages/python/`
+  - PySpark로 파이프라인을 짜는 법 → `data-engineering/`
+- **"이 언어가 무엇인가"는 여기, "이 도구를 어떻게 쓰는가"는 도메인 대분류입니다.** 판단이 헷갈리면 문서가 답하는 질문을 보십시오. 질문이 언어에 대한 것이면 여기입니다.
+- **언어 위에 얹힌 패키지 관리자·버전 관리 도구**(npm, nvm, pip 등)는 그 도구가 속한 생태계의 도메인 대분류로 갑니다. 언어 명세와 무관하게 바뀌기 때문입니다.
+
+## 문서 목록
+
+### Java — `java/`
+
+- [Java란 무엇인가 — 언어와 JVM은 서로 다른 명세다](./java/what-is-java.md)
+
+### Python — `python/`
+
+- [Python이란 무엇인가 — 타입 힌트와 GIL을 오해하지 않기](./python/what-is-python.md)
+
+### JavaScript — `javascript/`
+
+- [JavaScript란 무엇인가 — 명세에는 입출력도 브라우저도 없다](./javascript/what-is-javascript.md)
+
+### TypeScript — `typescript/`
+
+- [TypeScript란 무엇인가 — 타입은 컴파일 후 사라진다](./typescript/what-is-typescript.md)
+
+---
+
+*작성일: 2026-09-06*

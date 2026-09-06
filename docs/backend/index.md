@@ -15,6 +15,7 @@ sidebar_position: 1
 
 ## 경계
 
+- **언어 자체**(Java·Python이 무엇이고 어떻게 실행되는가)는 [언어](../languages/index.md)로 갑니다. 여기서는 그 언어의 **런타임을 서버에서 어떻게 굴리는가**(JVM 힙·GC, 이벤트 루프 등)를 다룹니다.
 - **데이터를 어디에 어떻게 저장하는가**는 [데이터베이스](../database/index.md)로 갑니다. 여기서는 애플리케이션이 그것을 **어떻게 부르는가**만 다룹니다.
 - **어디에 배포되고 어떻게 굴러가는가**는 [인프라](../infrastructure/index.md)로 갑니다.
 
@@ -26,9 +27,11 @@ sidebar_position: 1
 - [Node.js 설치 — 어떤 경로로, 어느 버전을](./nodejs/installation.md)
 - [nvm — Node 버전을 셸 단위로 갈아끼우기](./nodejs/nvm.md)
 - [npm — 무엇을 잠그고, 무엇을 잠그지 않는가](./nodejs/npm.md)
+- [pnpm — 무엇을 공유하고, 무엇을 막는가](./nodejs/pnpm.md)
+- [Yarn — 같은 이름의 서로 다른 두 도구](./nodejs/yarn.md)
 - [데이터 엔지니어는 실무에서 Node.js를 어디서 만나는가](./nodejs/for-data-engineers.md)
 - [Node.js와 비슷한 기술 스택은 무엇인가](./nodejs/alternatives.md)
 
 ---
 
-*작성일: 2026-09-05*
+*작성일: 2026-09-06*

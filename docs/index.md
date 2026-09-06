@@ -17,12 +17,13 @@ title: 개발 리서치 노트
 
 ## 📁 둘러보기
 
-문서는 **일곱 개의 대분류** 아래에 기술별로 쌓입니다. 왼쪽 메뉴에서 골라 들어가면 됩니다.
+문서는 **여덟 개의 대분류** 아래에 기술별로 쌓입니다. 왼쪽 메뉴에서 골라 들어가면 됩니다.
 
 | 대분류 | 다루는 것 |
 | --- | --- |
+| [언어](./languages/index.md) | 프로그래밍 언어 자체 — 정의·실행 모델·타입 시스템·사용 영역 (Java, Python, JavaScript, TypeScript …) |
 | [백엔드](./backend/index.md) | 애플리케이션 서버·API·런타임 (Spring, FastAPI, JVM, gRPC …) |
-| [프론트엔드](./frontend/index.md) | 브라우저에서 도는 것 (React, TypeScript, 번들러 …) |
+| [프론트엔드](./frontend/index.md) | 브라우저에서 도는 것 (React, 번들러, 브라우저 렌더링 …) |
 | [데이터 엔지니어링](./data-engineering/index.md) | 스트리밍·배치·오케스트레이션·저장 포맷 (Kafka, Spark, Airflow, Iceberg …) |
 | [데이터 분석](./data-analytics/index.md) | 분석용 변환·라이브러리·지표 (dbt, pandas, BI …) |
 | [인프라](./infrastructure/index.md) | 컨테이너·클라우드·IaC·관측성 (Kubernetes, Terraform, Prometheus …) |
@@ -63,4 +64,4 @@ docs/llm/claude-code/best-practices.md
 
 ---
 
-*작성일: 2026-09-05*
+*작성일: 2026-09-06*

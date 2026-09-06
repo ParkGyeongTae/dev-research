@@ -91,6 +91,7 @@ const config: Config = {
           label: '분류',
           position: 'left',
           items: [
+            { to: '/languages/', label: '언어' },
             { to: '/backend/', label: '백엔드' },
             { to: '/frontend/', label: '프론트엔드' },
             { to: '/data-engineering/', label: '데이터 엔지니어링' },
