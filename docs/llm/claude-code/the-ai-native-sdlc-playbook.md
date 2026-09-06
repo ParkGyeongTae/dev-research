@@ -170,9 +170,9 @@ Jira·ServiceNow를 어떻게 할 것인가에 대해 원문은 현실적입니�
 
 > "Both the legacy system and the markdown-first system can coexist, so long as there is a link between the two or one is declared the source of truth."
 
-## 6. 원문이 밝히는 경계
+## 6. 이 글이 스스로 그어 놓은 선
 
-벤더 글에서 가장 옮길 값어치가 있는 부분입니다. 위에서 인용한 것 외에 정리하면:
+벤더 글에서 가장 옮길 값어치가 있는 부분입니다. 앞에서 인용한 것 외에 정리하면:
 
 - **사람이 남는 지점이 명시돼 있습니다.** — "Humans remain accountable for every decision that requires judgment." 스펙 수용 판단은 사람이 하고, 조직이 고위험으로 분류한 것은 테크리드·아키텍트로 갑니다.
 - **게이트가 자동화보다 먼저 와야 합니다.** 5단계 CI/CD의 선행 조건이 "the gates must exist before automation accelerates anything"입니다. 순서를 뒤집으면 검수 없는 배포를 가속하게 됩니다.
@@ -278,17 +278,6 @@ Jira·ServiceNow를 어떻게 할 것인가에 대해 원문은 현실적입니�
 - **Cowork · Claude Security · Claude Tag의 실제 동작.** 존재와 기능 서술만 공식 페이지로 확인했고, **직접 써 보지 않았습니다.**
 - **CI eval 게이트의 구체적 구성.** 통과율 몇 %에서 막을지, eval을 무엇으로 돌릴지는 원문에 없고 확인하지도 않았습니다.
 - **원문의 최종 수정 여부.** 게시일(2026-08-21)만 있고 수정 이력 표기가 없습니다. 이 종류의 페이지는 조용히 바뀌므로 **위 인용은 2026-09-06 시점의 것**입니다.
-
-## 출처
-
-- [The AI-Native SDLC Playbook](https://claude.com/blog/the-ai-native-sdlc-playbook) — Louis Claxton, 게시 2026-08-21 (확인: 2026-09-06)
-- [Claude Code — Skills](https://code.claude.com/docs/en/skills) (확인: 2026-09-06)
-- [Claude Code — Settings](https://code.claude.com/docs/en/settings) (확인: 2026-09-06)
-- [Claude Code — Common workflows](https://code.claude.com/docs/en/common-workflows) (확인: 2026-09-06)
-- [Claude Code — GitHub Actions](https://code.claude.com/docs/en/github-actions) (확인: 2026-09-06)
-- [Claude Code — Memory](https://code.claude.com/docs/en/memory) (확인: 2026-09-06)
-- [Claude Security 제품 페이지](https://claude.com/product/claude-security) · [Claude Code — Claude Security](https://code.claude.com/docs/en/claude-security) (확인: 2026-09-06)
-- 로컬 `claude --version` → 2.1.236, macOS 15.7.4 (24G517), 2026-09-06 실행
 
 ---
 

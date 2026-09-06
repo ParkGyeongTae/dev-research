@@ -6,7 +6,7 @@ sidebar_position: 5
 
 "Yarn을 쓴다"는 말은 두 가지 중 하나를 뜻하고, **둘은 락 파일 형식도 설치 방식도 다릅니다.**
 `npm install -g yarn`으로 받는 것은 2024년에 멈춰 있는 1.x이고, 공식 문서가 가리키는 현대 Yarn은 4.x입니다.
-이 차이를 모르고 "Yarn 프로젝트"를 넘겨받으면 시작부터 어긋납니다.
+이 구분이 이 문서의 뼈대입니다 — 구분을 못 하면 "Yarn 프로젝트"를 넘겨받는 순간부터 어긋납니다.
 
 ## 실행 환경
 
@@ -38,7 +38,7 @@ npm 레지스트리를 직접 조회한 값입니다 (조회 2026-09-06).
 
 > the Yarn Classic line (1.x) remains a pillar of the JavaScript ecosystem
 
-그러면서 현대 Yarn으로 올라올 것을 권하며 근거로 안정성·신규 기능(Constraints 등)·유연성·확장성·설계를 듭니다. 그중 실무에 직접 걸리는 것은 **유연성**입니다 — 현대 Yarn은 설치 전략을 세 가지 중에 고를 수 있습니다: Yarn PnP, `node_modules`, 그리고 pnpm과 비슷한 content-addressed 캐시.
+"remains a pillar"라는 표현이 정확합니다 — 버려진 것은 아니지만 그 자리에 멈춰 있습니다. 같은 문서는 현대 Yarn으로 올라올 것을 권하며 근거로 안정성·신규 기능(Constraints 등)·유연성·확장성·설계를 듭니다. 그중 실무에 직접 걸리는 것은 **유연성**입니다 — 현대 Yarn은 설치 전략을 세 가지 중에 고를 수 있습니다: Yarn PnP, `node_modules`, 그리고 pnpm과 비슷한 content-addressed 캐시.
 
 정리하면 이렇습니다.
 
@@ -49,7 +49,9 @@ npm 레지스트리를 직접 조회한 값입니다 (조회 2026-09-06).
 | 기본 설치 방식 | 평평한 `node_modules` | **PnP (`node_modules` 없음)** |
 | 최신 배포 | 2024-03-09 | 2026-07-29 |
 
-**두 계열의 `yarn.lock`은 형식이 다릅니다.** 아래에서 실제로 비교합니다.
+**두 계열의 락 파일은 이름이 양쪽 다 `yarn.lock`인데 형식은 호환되지 않습니다.** 그래서 **파일명만 보고는 어느 계열인지 알 수 없고, 첫 줄을 봐야 합니다** — `# yarn lockfile v1`이면 Classic, `__metadata:`가 보이면 Modern입니다. 아래 §2·§3에서 실물을 비교합니다.
+
+같은 이유로 `yarn --version`이 `1.22.22`를 찍는데 프로젝트가 Modern용이라면, 그대로 명령을 돌리는 순간 **락 파일이 통째로 다시 쓰입니다.**
 
 ---
 
@@ -72,14 +74,14 @@ $ ls node_modules | grep -v '^\.' | wc -l
 
 **최상위에 65개가 펼쳐집니다.** 구조상 npm과 같은 호이스팅 방식입니다.
 
-그래서 선언하지 않은 패키지가 그대로 `require`됩니다.
+그 구조의 결과로, 선언하지 않은 패키지가 그대로 `require`됩니다.
 
 ```bash
 $ node -e "require('body-parser'); console.log('로드 성공')"
 로드 성공
 ```
 
-`body-parser`는 `express`의 하위 의존성이고 `package.json`에는 없습니다. 이 상태로 배포하면, 나중에 `express`가 의존성 구성을 바꾸는 순간 아무것도 안 고쳤는데 `MODULE_NOT_FOUND`가 납니다.
+`body-parser`는 `express`의 하위 의존성이고 `package.json`에는 없습니다. 이 상태로 배포하면, 나중에 `express`가 의존성 구성을 바꾸는 순간 **아무것도 안 고쳤는데 `MODULE_NOT_FOUND`가 납니다.** §3의 PnP는 정확히 이 문제를 겨냥합니다.
 
 락 파일은 YAML도 JSON도 아닌 자체 형식입니다.
 
@@ -98,7 +100,7 @@ accepts@^2.0.0:
     negotiator "^1.0.0"
 ```
 
-`resolved`가 **`registry.yarnpkg.com`**을 가리킵니다. npm 레지스트리의 미러이므로 받는 패키지는 같지만, 락 파일에 그 주소가 박힌다는 점은 사내 프록시를 쓸 때 걸립니다.
+첫 두 줄이 §1에서 말한 판별 표식입니다. 그리고 `resolved`가 **`registry.yarnpkg.com`**을 가리킵니다 — npm 레지스트리의 미러이므로 받는 패키지는 같지만, 락 파일에 그 주소가 박힌다는 점은 사내 프록시를 쓸 때 걸립니다.
 
 ---
 
@@ -145,11 +147,11 @@ $ yarn config get pnpMode
 strict
 ```
 
-**Yarn 4의 기본 설치 방식은 PnP(Plug'n'Play)이고, 모드는 `strict`입니다.**
+**Yarn 4의 기본 설치 방식은 PnP(Plug'n'Play)이고, 모드는 `strict`입니다.** 의존성 해석 정보가 디렉터리 구조가 아니라 `.pnp.cjs` 파일 하나에 들어 있습니다.
 
-### PnP에서는 `node`를 그냥 못 씁니다
+### 그래서 `node`를 그냥 못 씁니다
 
-의존성 해석 정보가 `node_modules` 디렉터리 구조가 아니라 `.pnp.cjs` 파일에 들어 있습니다. Node는 그 파일을 스스로 읽지 않습니다.
+Node는 `.pnp.cjs`를 스스로 읽지 않습니다. 그 결과가 이렇게 나타납니다.
 
 ```bash
 $ node -e "require('express'); console.log('로드 성공')"
@@ -160,9 +162,12 @@ $ corepack yarn node -e "require('express'); console.log('  express 로드 성�
 ```
 
 **같은 코드가 `node`로는 실패하고 `yarn node`로는 성공합니다.** `yarn node`가 PnP 런타임을 먼저 로드하기 때문입니다.
-이것이 PnP 도입에서 가장 크게 부딪히는 지점입니다 — 기존 스크립트·Dockerfile·IDE 설정에 박혀 있는 `node ...` 호출을 전부 `yarn node ...`로 바꿔야 합니다.
 
-### 유령 의존성 차단
+이것이 PnP 도입에서 가장 크게 부딪히는 지점입니다. 증상이 `Cannot find module`인데 **설치는 분명히 성공했기 때문에** 원인을 엉뚱한 데서 찾게 됩니다. 기존 스크립트·Dockerfile·IDE 설정에 박혀 있는 `node ...` 호출을 전부 `yarn node ...`로 바꿔야 하고, `node_modules` 경로를 뒤지는 번들러·테스트 러너·배포 스크립트도 같은 문제를 겪습니다.
+
+### 대신 유령 의존성이 차단됩니다
+
+§2에서 그냥 로드되던 것이 여기서는 막힙니다.
 
 ```bash
 $ corepack yarn node -e "require('body-parser')"
@@ -170,7 +175,7 @@ Error: Your application tried to access body-parser, but it isn't declared in
 your dependencies; this makes the require call ambiguous and unsound.
 ```
 
-에러 메시지가 원인과 이유를 함께 말합니다. Classic(§2)에서 그냥 로드되던 것과 정반대입니다.
+에러 메시지가 원인과 이유를 함께 말합니다. **이때 정답은 선언을 추가하는 것**이지 우회가 아닙니다 — 우회하면 PnP를 쓰는 이유가 사라집니다.
 
 ### 락 파일은 YAML입니다
 
@@ -192,7 +197,7 @@ __metadata:
   checksum: 10c0/98374742097e140891546076215f90c32644feacf652db48412329de4c…
 ```
 
-Classic의 `resolved` URL 대신 **`resolution`과 `checksum`**이 들어갑니다. 파일 이름은 양쪽 다 `yarn.lock`이지만 내용은 호환되지 않습니다.
+Classic의 `resolved` URL 대신 **`resolution`과 `checksum`**이 들어갑니다. §1에서 말한 대로 파일 이름은 같지만 내용은 호환되지 않습니다.
 
 ---
 
@@ -222,9 +227,9 @@ $ ls /Users/…/.yarn/berry/cache | wc -l
       69
 ```
 
-**`enableGlobalCache`가 기본 `true`라서 캐시가 프로젝트 밖에 놓입니다.** 패키지는 디렉터리가 아니라 **zip 아카이브 한 개씩**으로 저장됩니다 — PnP가 zip 안을 직접 읽기 때문에 압축을 풀지 않습니다.
+**`enableGlobalCache`가 기본 `true`라서 캐시가 프로젝트 밖에 놓입니다.** 그리고 패키지는 디렉터리가 아니라 **zip 아카이브 한 개씩**으로 저장됩니다 — §3의 PnP가 zip 안을 직접 읽기 때문에 압축을 풀지 않습니다. `node_modules`가 없는 것과 zip으로 두는 것이 같은 설계의 두 면입니다.
 
-zero-install을 하려면 `enableGlobalCache: false`로 바꿔 캐시를 프로젝트 안으로 가져오고 `.yarn/cache`를 커밋해야 합니다. **기본 설정으로 도입하면 그 동작은 얻어지지 않습니다.**
+zero-install을 하려면 `enableGlobalCache: false`로 바꿔 캐시를 프로젝트 안으로 가져오고 `.yarn/cache`를 커밋해야 합니다. **기본 설정으로 도입하면 그 동작은 얻어지지 않습니다** — zero-install을 기대하고 Yarn Modern을 고른 것이라면 별도 설정과 "저장소에 바이너리를 커밋한다"는 결정이 함께 필요합니다.
 
 > 위 문단의 zero-install 구성 방법은 설정값에서 따라 나오는 설명이며, **이 저장소에서 zero-install 구성을 실제로 만들어 돌려보지 않았습니다 — 확인 필요.**
 
@@ -232,7 +237,7 @@ zero-install을 하려면 `enableGlobalCache: false`로 바꿔 캐시를 프로�
 
 ## 5. PnP가 부담스러우면 `node_modules`로 되돌릴 수 있습니다
 
-`.yarnrc.yml`에 한 줄이면 됩니다. 실제로 돌린 결과입니다.
+§1에서 "설치 전략을 고를 수 있다"고 한 것이 이 부분입니다. `.yarnrc.yml`에 한 줄이면 됩니다.
 
 ```bash
 $ cat .yarnrc.yml
@@ -252,7 +257,7 @@ $ node -e "require('body-parser'); console.log('로드 성공 (차단 안 됨)')
 
 **`node_modules`가 생기고, 유령 의존성도 다시 통과합니다.** `node`도 그냥 씁니다.
 
-즉 현대 Yarn을 쓴다고 해서 반드시 PnP를 받아들여야 하는 것은 아닙니다. 다만 **`nodeLinker: node-modules`로 두면 PnP가 주는 엄격함은 포기하는 것**이고, 남는 이점은 최신 버전·Constraints·워크스페이스 기능 쪽입니다.
+즉 현대 Yarn을 쓴다고 해서 반드시 PnP를 받아들여야 하는 것은 아닙니다. 다만 이 선택은 **§3의 두 결과를 한 묶음으로 버리는 것**입니다 — `node`를 그냥 못 쓰는 불편과 유령 의존성 차단이라는 이점이 같이 사라집니다. 남는 이점은 최신 버전·Constraints·워크스페이스 기능 쪽입니다.
 
 ---
 
@@ -262,7 +267,7 @@ $ node -e "require('body-parser'); console.log('로드 성공 (차단 안 됨)')
 
 > Install Corepack, an intermediary tool that will let you configure your package manager version on a per-project basis.
 
-문서가 제시하는 명령은 `npm install -g corepack` 후 `yarn init -2`입니다. **공식 문서가 Corepack을 따로 설치하라고 적고 있다는 점**이 중요합니다.
+문서가 제시하는 명령은 `npm install -g corepack` 후 `yarn init -2`입니다. **공식 문서가 Corepack을 따로 설치하라고 적고 있다는 점**이 중요합니다. 이유는 Node 쪽에 있습니다.
 
 Node.js 25.0.0 릴리스 노트의 SEMVER-MAJOR 항목입니다 (출처: `https://nodejs.org/en/blog/release/v25.0.0`, 확인 2026-09-06).
 
@@ -277,6 +282,8 @@ $ corepack -v
 0.34.0
 ```
 
+이게 실무에서 걸리는 모양은 이렇습니다 — **Node를 올렸을 뿐인데 CI가 `corepack: command not found`로 깨지고**, 원인이 Yarn 쪽이 아니라 Node 릴리스 노트에 있어서 찾기 어렵습니다. CI 스크립트 앞에 `npm install -g corepack`을 넣어야 합니다.
+
 Node 24 LTS 계열에 Corepack이 여전히 번들되는지는 **확인하지 않았습니다 — 확인 필요.**
 
 기존 프로젝트의 Yarn 버전을 바꿀 때는 `yarn set version`을 씁니다. 공식 문서 표현입니다.
@@ -287,43 +294,13 @@ Node 24 LTS 계열에 Corepack이 여전히 번들되는지는 **확인하지 �
 
 ---
 
-## 7. 경계 — Yarn이 안 맞는 곳
+## 7. 그래서 무엇을 고를 것인가
 
-- **Yarn Classic을 새로 시작하는 프로젝트에 도입할 때.** 최신 배포가 2024-03-09이고 공식 문서가 현대 Yarn으로 옮기라고 안내합니다. 기존 프로젝트를 유지하는 것과 새로 고르는 것은 다른 판단입니다.
-- **PnP를 쓰는데 도구 체인이 `node_modules`를 전제할 때.** `node` 직접 호출, 일부 번들러·테스트 러너·IDE 플러그인, `node_modules` 경로를 뒤지는 배포 스크립트가 해당합니다. §3의 실행 기록이 그 증상입니다.
-- **팀이 두 계열을 섞어 쓸 때.** 파일 이름이 양쪽 다 `yarn.lock`이라 **파일명만 보고는 어느 계열인지 알 수 없습니다.** 첫 줄(`# yarn lockfile v1` 대 `__metadata:`)을 봐야 합니다.
-- **zero-install을 기대하고 도입할 때.** §4대로 기본값이 아닙니다. 별도 설정과 저장소에 캐시를 커밋하는 결정이 필요합니다.
+여기까지를 판단으로 정리하면 이렇습니다. (의견)
 
----
-
-## 8. 실패 모드
-
-### (a) `yarn --version`이 1.22.22
-
-전역 설치된 Classic이 잡힌 것입니다. 프로젝트가 Modern용이면 `yarn.lock` 형식이 안 맞아 락이 통째로 다시 쓰입니다.
-**구분법**: `yarn.lock` 첫 줄이 `# yarn lockfile v1`이면 Classic, `__metadata:`가 보이면 Modern입니다.
-
-### (b) `Cannot find module` — 그런데 설치는 성공
-
-§3의 실행 기록. PnP 프로젝트에서 `node`를 직접 불렀을 때입니다. `yarn node`로 부르거나 `nodeLinker: node-modules`로 바꿔야 합니다.
-
-### (c) `it isn't declared in your dependencies`
-
-§3의 실행 기록. PnP가 유령 의존성을 차단한 것입니다. **선언을 추가하는 것이 정답**이고, 회피하려면 엄격함을 포기하는 선택이 됩니다.
-
-### (d) Node 25 이상 CI에서 `corepack: command not found`
-
-§6의 릴리스 노트. Node를 올렸을 뿐인데 CI가 깨지고, 원인이 Node 릴리스 노트에 있어 찾기 어렵습니다. `npm install -g corepack`을 앞에 넣어야 합니다.
-
----
-
-## 출처
-
-- Yarn 마이그레이션 개요(Classic 대 Modern) — `https://yarnpkg.com/migration/overview` (확인 2026-09-06)
-- Yarn 설치 문서(Corepack, `yarn set version`) — `https://yarnpkg.com/getting-started/install` (확인 2026-09-06)
-- Node.js 25.0.0 릴리스 노트(Corepack 배포 중단) — `https://nodejs.org/en/blog/release/v25.0.0` (확인 2026-09-06)
-- Yarn 버전 이력 — npm 레지스트리 `registry.npmjs.org/yarn`, `registry.npmjs.org/@yarnpkg/cli` 직접 조회 (2026-09-06)
-- 실행 기록 — macOS Darwin 24.6.0 / arm64 / Node v22.21.1 / Corepack 0.34.0 / Yarn 1.22.22 · 4.18.0, 2026-09-06 직접 실행
+- **새로 시작하는 프로젝트에 Classic을 고를 이유는 없습니다.** 최신 배포가 2024-03-09이고 공식 문서가 현대 Yarn으로 옮기라고 안내합니다. 다만 **기존 Classic 프로젝트를 유지하는 것과 새로 고르는 것은 다른 판단**입니다 — 마이그레이션에는 §3의 도구 체인 비용이 붙습니다.
+- **PnP를 받아들일지는 도구 체인이 정합니다.** `node`를 직접 부르는 스크립트, `node_modules` 경로를 전제하는 번들러·테스트 러너·IDE 플러그인이 얼마나 있는지가 실질적인 기준입니다. 감당이 안 되면 §5로 되돌리면 되고, 그건 실패가 아니라 설계상 준비된 선택지입니다.
+- **팀이 두 계열을 섞어 쓰지 않게 합니다.** §1의 락 파일 판별법을 팀에 공유하고, `packageManager` 필드로 버전을 박아 두는 것이 가장 단순합니다.
 
 ---
 
