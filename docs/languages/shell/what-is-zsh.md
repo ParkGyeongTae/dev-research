@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 6
 ---
 
 # zsh란 무엇인가 — 스크립트가 조용히 달라지는 지점

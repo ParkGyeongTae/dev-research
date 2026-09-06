@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 8
 ---
 
 # Oh My Zsh란 무엇인가 — 느린 셸의 범인은 대개 이것이 아닙니다

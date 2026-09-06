@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 5
 ---
 
 # dash란 무엇인가 — 리눅스에서 `#!/bin/sh`를 실제로 읽는 것
