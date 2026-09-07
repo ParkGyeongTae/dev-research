@@ -4,6 +4,12 @@ sidebar_position: 6
 
 # zsh란 무엇인가 — bash와 문법이 같아 보이지만 의미가 다른 셸
 
+> **원문** — [zsh.org](https://www.zsh.org/) · 로컬 `man zshall` (zsh 5.9, 2022-05-14 판)
+>
+> **확인 날짜** — 2026-09-07. zsh 자체에는 판번호가 있으나(5.9), zsh.org 첫 화면에는 판번호가 없어 확인 날짜로 대신합니다.
+>
+> **검증 상태** — zsh.org의 소개 문장과 배포처 목록을 읽고 정리했습니다. 규격서나 매뉴얼 전문을 통독하지는 않았습니다. 동작 차이는 **이 맥의 zsh 5.9·bash 3.2.57·dash·`/bin/sh`에서 직접 돌린 결과**입니다. 배포 판번호는 이전 판에서 HTTP 상태 코드만 봤던 것을 이번에 **파일 형식·크기와 404 대조군까지** 확인해 다시 판단했습니다.
+
 맥의 기본 로그인 셸이 zsh이므로, 터미널에서 명령을 짜 맞춘 뒤 그대로 `.sh` 파일에 옮기는 일이 자연스럽게 일어납니다.
 그런데 **zsh는 bash와 문법이 비슷할 뿐, 같은 문법에 다른 의미를 준 곳이 있습니다.** 문법이 달랐다면 오류가 나서 알았을 텐데, 문법이 같으니 **오류 없이 다른 값이 나옵니다.**
 이 문서는 그 "같은 문법, 다른 의미"가 어디인지를 개념으로 잡고 실제로 돌려서 확인합니다.
@@ -14,11 +20,11 @@ sidebar_position: 6
 
 | 항목 | 값 |
 | --- | --- |
-| OS | macOS (Darwin 24.6.0), arm64 |
+| OS | macOS 15.7.4 (Darwin 24.6.0), arm64 |
 | `/bin/zsh` | zsh 5.9 (arm64-apple-darwin24.0) |
 | `$SHELL` | `/bin/zsh` |
-| 비교 대상 | `/bin/bash` 3.2.57, `/bin/dash`, `/bin/sh`(=bash 3.2.57) |
-| 실행 날짜 | 2026-09-06 |
+| 비교 대상 | `/bin/bash` 3.2.57, `/bin/dash`(dash-16), `/bin/sh`(=bash 3.2.57) |
+| 실행 날짜 | 2026-09-07 |
 
 ---
 
@@ -28,33 +34,49 @@ sidebar_position: 6
 
 > a shell designed for interactive use, although it is also a powerful scripting language
 >
-> — [zsh.org](https://www.zsh.org/) (확인: 2026-09-06)
+> **번역** — 대화형 사용을 위해 설계된 셸입니다. 다만 강력한 스크립트 언어이기도 합니다.
+>
+> — [zsh.org](https://www.zsh.org/) (확인: 2026-09-07)
 
 **"대화형 사용을 위해 설계됐다"가 먼저 나오는 것**이 zsh의 성격을 그대로 보여줍니다. 스크립트 언어이기도 하지만 무게중심이 다르고, 뒤에 나올 설계 선택들도 이 우선순위에서 나옵니다 — 터미널에서 사람이 치기 편한 쪽을 골랐고, 그 선택이 POSIX 계열의 관례와 갈립니다.
 
 **이 문서는 언어로서의 zsh만 다룹니다.** 프롬프트 구성·자동완성·설정 프레임워크 같은 대화형 환경 이야기는 주제가 아니고, **그것이 스크립트를 깨뜨리는 지점**(§5)만 짚습니다.
 
-### 버전
+### 어느 판이 최신인지는 자료가 갈립니다
 
-이 머신에 깔린 것과 공개된 최신 릴리스입니다.
+이 머신에 깔린 것입니다.
 
 ```console
 $ /bin/zsh --version
 zsh 5.9 (arm64-apple-darwin24.0)
 ```
 
-공식 배포처(SourceForge)에는 5.9 이후 판이 올라와 있습니다. 파일 존재를 직접 확인한 결과입니다 (조회: 2026-09-06).
+그런데 "최신 안정판"을 물으면 두 공식 창구의 답이 다릅니다.
+
+**zsh.org 첫 화면은 5.9를 현재 릴리스로 안내합니다.** 미러 목록의 문구가 그대로 그렇게 적혀 있습니다.
 
 ```console
-$ for v in 5.9 5.9.1 5.9.2; do
-    curl -s -o /dev/null -w "%{http_code}\n" -L "https://sourceforge.net/projects/zsh/files/zsh/$v/zsh-$v.tar.xz/download"
-  done
-200
-200
-200
+$ curl -s https://www.zsh.org/ | sed 's/<[^>]*>//g' | tr -s ' ' | grep -i 'current release'
+ (5.9) site known to have current release (5.9) as at 2022-10-08
 ```
 
-**5.9.1·5.9.2가 존재합니다**(디렉터리 게시일 2026-07-12). 다만 같은 시점에 zsh.org 첫 화면은 5.9를 현재 릴리스로 안내하고 있었습니다 — **두 자료가 갈리므로 어느 쪽이 최신 안정판인지는 확정하지 않습니다. 확인 필요.**
+**반면 배포처(SourceForge)에는 5.9.1·5.9.2 디렉터리와 실제 tarball이 올라와 있습니다.** 이전 판에서는 HTTP 200만 보고 "존재한다"고 적었는데, SourceForge는 없는 파일에도 HTML 안내 페이지를 200으로 돌려줄 수 있으므로 그것만으로는 근거가 약합니다. **응답 형식과 크기까지 보고, 없는 판(5.99)을 대조군으로 넣어** 다시 확인했습니다.
+
+```console
+$ for v in 5.9 5.9.1 5.9.2 5.99; do
+    printf '%-7s ' "$v"
+    curl -sL -o /dev/null -w 'code=%{http_code} type=%{content_type} size=%{size_download}\n' \
+      "https://sourceforge.net/projects/zsh/files/zsh/$v/zsh-$v.tar.xz/download"
+  done
+5.9     code=200 type=application/octet-stream size=3332400
+5.9.1   code=200 type=application/octet-stream size=3414612
+5.9.2   code=200 type=application/octet-stream size=3439480
+5.99    code=404 type=text/html; charset=utf-8 size=50149
+```
+
+**앞의 셋은 3MB대의 바이너리 tarball을 돌려주고, 없는 판은 404에 HTML을 돌려줍니다.** 대조군이 갈리므로 5.9.1·5.9.2의 파일은 실재합니다.
+
+그래서 정확한 서술은 이렇습니다 — **5.9 이후 판의 tarball이 배포처에 존재하고, zsh.org 첫 화면은 그것을 현재 릴리스로 안내하지 않습니다.** 어느 쪽이 "최신 안정판"인지는 **확정하지 않습니다. 확인 필요.** 이 문서의 모든 동작 서술은 **이 맥의 5.9 기준**입니다.
 
 ---
 
@@ -129,6 +151,16 @@ zsh    -> 지원: v
 
 그래서 **로컬 안에서도 셸이 갈립니다.** 터미널(zsh)에서 시험할 때는 되던 것이, `#!/bin/bash`를 붙여 파일로 만드는 순간 안 됩니다. "같은 컴퓨터인데 왜"라는 반응이 나오는 지점이고, 원인은 컴퓨터가 아니라 셸입니다.
 
+**다만 이건 zsh가 bash보다 앞선다는 뜻이 아니라 이 맥의 bash가 2006년 판이라는 뜻입니다.** 배포 대상의 bash 5.x에서는 같은 문법이 그냥 돕니다.
+
+```console
+$ docker run --rm debian:trixie-slim bash -c 'bash --version|head -1; declare -A m; m[k]=v; echo "연관배열: ${m[k]}"'
+GNU bash, version 5.2.37(1)-release (aarch64-unknown-linux-gnu)
+연관배열: v
+```
+
+즉 §4는 **zsh와 bash의 차이가 아니라 로컬과 배포 대상의 차이**입니다. §2·§3과 성격이 다르므로 같이 묶어 기억하면 잘못된 결론이 나옵니다.
+
 `[[ ]]`는 양쪽 다 됩니다.
 
 ```console
@@ -147,9 +179,18 @@ macOS의 기본 로그인 셸이 zsh입니다.
 ```console
 $ echo $SHELL
 /bin/zsh
+$ dscl . -read /Users/$USER UserShell
+UserShell: /bin/zsh
 ```
 
 그래서 데이터 엔지니어가 zsh를 쓰는 시간의 대부분은 **터미널에서 명령을 치는 시간**입니다. 스크립트를 zsh로 짜는 경우는 상대적으로 드뭅니다 — 배포 대상(컨테이너·CI·리눅스 서버)에 zsh가 기본 설치돼 있다고 가정할 수 없기 때문입니다. `#!/bin/zsh` 스크립트를 zsh 없는 이미지로 보내면 셔뱅 해석 단계에서 실행 자체가 실패합니다.
+
+실제로 기본 이미지에는 없습니다.
+
+```console
+$ docker run --rm debian:trixie-slim sh -c 'command -v zsh || echo "zsh 없음"'
+zsh 없음
+```
 
 ### 그래서 실제로 걸리는 지점
 
@@ -159,8 +200,17 @@ $ echo $SHELL
 
 **결론(의견): 대화형은 zsh를 쓰되, 배포되는 스크립트는 `bash`나 POSIX `sh`로 짜고 셔뱅을 명시하는 편이 안전합니다.** 로컬 검증도 그 셸로 해야 의미가 있습니다.
 
-> 2번의 `.zshrc` 미적용과 `#!/bin/zsh`의 배포 실패는 구조에서 따라 나오는 설명이며, **이 저장소에서 컨테이너로 재현하지 않았습니다 — 확인 필요.**
+---
+
+## 확인하지 못한 것
+
+- **5.9 이후 판이 무엇인지.** §1. 배포처에 5.9.1·5.9.2 tarball이 실재한다는 것은 확인했지만, zsh.org가 그것을 현재 릴리스로 안내하지 않아 **어느 쪽이 최신 안정판인지 확정하지 않았습니다.** 릴리스 공지나 `NEWS`를 대조하지 못했습니다. **확인 필요.**
+- **5.9 이후 판에서 §2·§3의 동작이 그대로인지.** 이 문서의 모든 실행 기록은 5.9에서 나왔습니다. 상위 판을 설치해 재현하지 않았습니다. **미실행.**
+- **`.zshrc` 미적용으로 생기는 `command not found`(§5의 2번).** 구조에서 따라 나오는 설명이고 이 문서에서 크론·CI로 재현하지 않았습니다. **미실행.**
+- **`#!/bin/zsh` 스크립트의 배포 실패.** Debian 기본 이미지에 zsh가 없다는 것은 확인했지만(§5), 그 이미지에 `#!/bin/zsh` 스크립트를 넣어 실제 오류 메시지를 받아 보지는 않았습니다. **미실행.**
+- **`SH_WORD_SPLIT` 옵션.** zsh에는 §2의 동작을 POSIX 쪽으로 되돌리는 옵션이 있는 것으로 알려져 있으나, 매뉴얼에서 근거 문장을 확정하지 못했고 켜서 돌려 보지도 않았습니다. **확인 필요.**
+- **리눅스의 zsh.** 이 문서의 zsh 실행 기록은 macOS 번들 5.9에서만 나왔습니다.
 
 ---
 
-*작성일: 2026-09-06*
+*작성일: 2026-09-07*

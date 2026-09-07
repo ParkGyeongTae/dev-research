@@ -4,6 +4,12 @@ sidebar_position: 9
 
 # 셔뱅이란 무엇인가 — 셸이 아니라 커널이 읽는 첫 줄
 
+> **원문** — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) · [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c` (태그 `xnu-11417.140.69`)](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) · [`fs/binfmt_script.c`, Linux v6.12](https://github.com/torvalds/linux/blob/v6.12/fs/binfmt_script.c) · [The Open Group Base Specifications Issue 8, `sh`](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html)
+>
+> **확인 날짜** — 2026-09-07에 위 원문의 인용 문장이 그 자리에 있는지 다시 대조했습니다. man-pages와 커널 소스에는 판번호가 있고(6.18 / v6.12 / `xnu-11417.140.69`), GNU coreutils 매뉴얼 페이지에는 판번호가 없어 확인 날짜로 대신합니다.
+>
+> **검증 상태** — man page의 해당 절과 두 커널의 셔뱅 처리 코드를 읽고 정리했습니다. 커널 소스 전체를 통독하지는 않았습니다. **실행 기록은 2026-09-06에 macOS와 Docker 컨테이너 두 곳에서 직접 돌린 것**이며(실행 환경 표 참조), 이번 갱신에서는 다시 돌리지 않고 원문 대조와 번역만 더했습니다.
+
 `#!/bin/bash`을 "셸에게 주는 지시"로 이해하면 대부분의 동작이 설명되지 않습니다.
 셔뱅을 읽는 것은 셸이 아니라 **커널의 `execve()`** 이고, 커널은 그 줄을 문법이 아니라 **파일 맨 앞 두 바이트짜리 매직 넘버**로 취급합니다. 그래서 셔뱅의 규칙은 셸 문법이 아니라 **커널 구현마다 다른 규칙**이고, 실제로 macOS와 Linux가 다릅니다.
 
@@ -45,7 +51,9 @@ Linux 쪽 실행 기록은 **Docker Desktop이 띄운 linuxkit 커널 하나**�
 
 > Furthermore, on systems that support executable scripts (the "#!" construct), it is recommended that applications using executable scripts install them using `getconf PATH` to determine the shell pathname and update the "#!" script appropriately as it is being installed
 >
-> — [The Open Group Base Specifications Issue 8 (POSIX.1-2024), `sh`, APPLICATION USAGE](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-06)
+> **번역** — 나아가, 실행 가능한 스크립트("#!" 구성)를 지원하는 시스템에서는, 실행 가능한 스크립트를 쓰는 응용 프로그램이 설치 시 `getconf PATH`로 셸의 경로명을 알아내어 "#!" 스크립트를 적절히 갱신하며 설치하는 것을 권장합니다.
+>
+> — [The Open Group Base Specifications Issue 8 (POSIX.1-2024), `sh`, APPLICATION USAGE](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-07)
 
 규격이 정의하지 않았으니 정의는 각 커널 문서에 있습니다. Linux의 `execve(2)`가 이렇게 씁니다.
 
@@ -55,7 +63,13 @@ Linux 쪽 실행 기록은 **Docker Desktop이 띄운 linuxkit 커널 하나**�
 >
 > The interpreter must be a valid pathname for an executable file.
 >
-> — [`execve(2)`, Linux man-pages 6.18 (2026-02-08)](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-06)
+> **번역** — 해석자 스크립트란, 실행 권한이 켜져 있고 첫 줄이 다음 형태인 텍스트 파일입니다.
+>
+> `#!interpreter [optional-arg]`
+>
+> `interpreter`는 실행 가능한 파일의 유효한 경로명이어야 합니다.
+>
+> — [`execve(2)`, Linux man-pages 6.18 (2026-02-08)](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-07)
 
 `execve(2)`는 **시스템 콜 문서**입니다. 즉 셔뱅 처리는 셸이 아니라 커널의 프로그램 적재 단계에 들어 있습니다. macOS 쪽도 같습니다 — XNU 소스에 `exec_shell_imgact()`라는 이미지 액티베이터가 있고, 파일의 첫 두 바이트가 `#!`인지부터 봅니다.
 
@@ -71,7 +85,7 @@ Linux 쪽 실행 기록은 **Docker Desktop이 띄운 linuxkit 커널 하나**�
 	}
 ```
 
-— [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c`, 태그 `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) (확인: 2026-09-06). 이 맥이 돌리는 커널은 `xnu-11417.140.69.708.3`이고, 공개된 소스 태그 중 가장 가까운 것이 `xnu-11417.140.69`입니다.
+— [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c`, 태그 `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) (확인: 2026-09-07). 이 맥이 돌리는 커널은 `xnu-11417.140.69.708.3`이고, 공개된 소스 태그 중 가장 가까운 것이 `xnu-11417.140.69`입니다.
 
 커널이 하는 일은 눈으로 볼 수 있습니다. 위 C 프로그램을 해석자로 지정해 두고 스크립트를 실행하면, 커널이 **새로 조립한 `argv`가 그대로** 찍힙니다.
 
@@ -114,7 +128,13 @@ body ran under: u
 >
 > where `arg...` is the series of words pointed to by the `argv` argument of `execve()`, starting at `argv[1]`. Note that there is no way to get the `argv[0]` that was passed to the `execve()` call.
 >
-> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-06)
+> **번역** — 해석자는 다음 인자들과 함께 호출됩니다.
+>
+> `interpreter [optional-arg] path arg...`
+>
+> 여기서 `arg...`는 `execve()`의 `argv` 인자가 가리키는 단어들을 `argv[1]`부터 이어 놓은 것입니다. `execve()` 호출에 전달됐던 `argv[0]`을 얻을 방법은 없다는 점에 유의하십시오.
+>
+> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-07)
 
 마지막 문장이 실무에서 걸립니다. **원래 `argv[0]`은 버려집니다.** Python으로 `argv[0]`을 일부러 다른 값으로 넣어 `execv()`를 불러 봤습니다.
 
@@ -154,7 +174,9 @@ via PATH  : argv[1]=[/w/bin/mytool]
 
 > The semantics of the `optional-arg` argument of an interpreter script vary across implementations. On Linux, the entire string following the interpreter name is passed as a single argument to the interpreter, and this string can include white space. However, behavior differs on some other systems. Some systems use the first white space to terminate `optional-arg`. On some systems, an interpreter script can have multiple arguments, and white spaces in `optional-arg` are used to delimit the arguments.
 >
-> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-06)
+> **번역** — 해석자 스크립트의 `optional-arg` 인자가 갖는 의미는 구현마다 다릅니다. Linux에서는 해석자 이름 뒤에 오는 문자열 전체가 해석자에게 **하나의 인자**로 전달되며, 이 문자열에는 공백이 들어갈 수 있습니다. 그러나 다른 일부 시스템에서는 동작이 다릅니다. 어떤 시스템은 첫 공백에서 `optional-arg`를 끝냅니다. 또 어떤 시스템에서는 해석자 스크립트가 여러 개의 인자를 가질 수 있고, `optional-arg` 안의 공백이 인자를 구분하는 데 쓰입니다.
+>
+> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-07)
 
 macOS는 마지막 부류입니다. XNU 소스가 "토큰화"라고 적어 두었습니다.
 
@@ -165,7 +187,7 @@ macOS는 마지막 부류입니다. XNU 소스가 "토큰화"라고 적어 두�
 		argstart = imgp->ip_interp_buffer;
 ```
 
-— [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c` (`exec_extract_strings`), 태그 `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) (확인: 2026-09-06)
+— [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c` (`exec_extract_strings`), 태그 `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) (확인: 2026-09-07)
 
 같은 셔뱅 줄을 두 환경에서 돌린 결과입니다.
 
@@ -226,7 +248,9 @@ Linux에서는 커널이 `python3 -u`를 **한 덩어리 문자열**로 넘겼�
 
 > The `-S`/`--split-string` option enables use of multiple arguments on the first line of scripts (the shebang line, '#!').
 >
-> — [GNU Coreutils manual, `env` invocation](https://www.gnu.org/software/coreutils/manual/html_node/env-invocation.html) (확인: 2026-09-06)
+> **번역** — `-S`/`--split-string` 옵션은 스크립트 첫 줄(셔뱅 줄, '#!')에서 여러 개의 인자를 쓸 수 있게 해 줍니다.
+>
+> — [GNU Coreutils manual, `env` invocation](https://www.gnu.org/software/coreutils/manual/html_node/env-invocation.html) (확인: 2026-09-07)
 
 macOS의 `env`는 BSD 계열이지만 `-S`를 갖고 있고(`usage: env [-0iv] [-C workdir] [-P utilpath] [-S string]` — 직접 확인), 위 실측대로 양쪽에서 같은 결과를 냅니다. **셔뱅에 옵션을 두 개 이상 붙여야 하면 `env -S`를 쓰거나, 아예 옵션을 스크립트 안으로 옮기는 편이 안전합니다**(의견).
 
@@ -283,8 +307,8 @@ $ cd sub && ./t           # 같은 파일, 디렉터리만 바꿔서
 
 | 커널 | 버퍼 상수 | 값 | 근거 |
 | --- | --- | --- | --- |
-| Linux | `BINPRM_BUF_SIZE` | 256 바이트 | [`include/uapi/linux/binfmts.h`, v6.12](https://github.com/torvalds/linux/blob/v6.12/include/uapi/linux/binfmts.h) (확인: 2026-09-06) |
-| XNU | `IMG_SHSIZE` | 512 바이트 | [`bsd/sys/imgact.h`, `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/sys/imgact.h) (확인: 2026-09-06) |
+| Linux | `BINPRM_BUF_SIZE` | 256 바이트 | [`include/uapi/linux/binfmts.h`, v6.12](https://github.com/torvalds/linux/blob/v6.12/include/uapi/linux/binfmts.h) (확인: 2026-09-07) |
+| XNU | `IMG_SHSIZE` | 512 바이트 | [`bsd/sys/imgact.h`, `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/sys/imgact.h) (확인: 2026-09-07) |
 
 인자를 `x`로 채워 가며 경계를 직접 재 봤습니다. `line_len`은 첫 줄의 문자 수(개행 제외), `arg_len`은 해석자가 실제로 받은 인자의 길이입니다.
 
@@ -320,7 +344,7 @@ Linux가 그렇게 하는 것은 의도된 설계이고, 커널 주석이 이유
 	 * parse them on its own.
 ```
 
-— [`fs/binfmt_script.c`, v6.12](https://github.com/torvalds/linux/blob/v6.12/fs/binfmt_script.c) (확인: 2026-09-06)
+— [`fs/binfmt_script.c`, v6.12](https://github.com/torvalds/linux/blob/v6.12/fs/binfmt_script.c) (확인: 2026-09-07)
 
 즉 **인자가 잘리는 것은 봐주고, 해석자 경로가 잘리는 것만 막습니다.** 경로 쪽이 넘치면 ENOEXEC가 납니다. 262자짜리 해석자 경로로 확인했습니다.
 
@@ -339,6 +363,10 @@ Linux 쪽 출력이 이 문서에서 가장 헷갈리는 실패의 모양입니�
 한 가지 짚어 둘 것이 있습니다. man page는 한계를 이렇게 씁니다.
 
 > Before Linux 5.1, the limit is 127 characters. Since Linux 5.1, the limit is 255 characters.
+>
+> **번역** — Linux 5.1 이전에는 그 한계가 127자입니다. Linux 5.1부터는 255자입니다.
+>
+> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-07)
 
 그런데 실측에서 온전히 살아남은 것은 `#!` 뒤 **253자**였습니다(첫 줄 255자). 소스를 보면 파싱 범위의 끝이 `buf_end = bprm->buf + sizeof(bprm->buf) - 1`(인덱스 255)이고 그 자리에 NUL이 들어가므로, 실제로 쓸 수 있는 텍스트는 인덱스 2~254 = 253자입니다 — **소스를 읽은 제 계산이며**, 다른 커널 판에서는 확인하지 않았습니다. 어느 쪽이든 실무적 결론은 같습니다: **긴 가상환경 경로를 셔뱅에 적으면 리눅스에서 조용히 잘릴 수 있고, 맥에서는 그 사실이 드러나지 않습니다.**
 
@@ -350,7 +378,9 @@ Linux 쪽 출력이 이 문서에서 가장 헷갈리는 실패의 모양입니�
 
 > If the `execl()` function fails due to an error equivalent to the [ENOEXEC] error defined in the System Interfaces volume of POSIX.1-2024, the shell shall execute a command equivalent to having a shell invoked with the pathname resulting from the search as its first operand, with any remaining arguments passed to the new shell
 >
-> — [The Open Group Base Specifications Issue 8 (POSIX.1-2024), Shell Command Language, 2.9.1 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) (확인: 2026-09-06)
+> **번역** — `execl()` 함수가 POSIX.1-2024의 System Interfaces 권에 정의된 [ENOEXEC] 오류에 해당하는 오류로 실패하면, 셸은 검색 결과로 나온 경로명을 첫 번째 피연산자로 하여 셸을 호출한 것과 동등한 명령을 실행해야 하며, 남은 인자들은 그 새 셸에 전달되어야 합니다.
+>
+> — [The Open Group Base Specifications Issue 8 (POSIX.1-2024), Shell Command Language, 2.9.1 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) (확인: 2026-09-07)
 
 **ENOEXEC이면 셸이 그 파일을 셸 스크립트로 다시 실행한다** — 이 되돌림이 셔뱅 문제의 증상을 통째로 바꿔 놓습니다. 셔뱅 없는 파이썬 파일을 실행해 보면 이렇게 나옵니다.
 
@@ -487,7 +517,9 @@ Linux는 네 단계까지 허용합니다. man page에 그대로 적혀 있습�
 
 > Since Linux 2.6.28, the kernel permits the interpreter of a script to itself be a script. This permission is recursive, up to a limit of four recursions
 >
-> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-06)
+> **번역** — Linux 2.6.28부터, 커널은 스크립트의 해석자가 그 자체로 스크립트인 것을 허용합니다. 이 허용은 재귀적이며, 네 번의 재귀까지가 한계입니다.
+>
+> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-07)
 
 macOS는 **한 단계도 허용하지 않습니다.** §1에 인용한 `IMGPF_INTERPRET` 검사가 그것이고, `os.execv()`로 확인한 errno도 `8 Exec format error`였습니다. 위 `depth=1` 출력이 그럴듯하게 보이는 것은 §6의 되돌림 때문입니다 — 커널이 거절하자 셸이 `./s1`을 셸 스크립트로 읽었고, 2행의 `body`에서 걸린 것입니다.
 
@@ -499,7 +531,9 @@ macOS는 **한 단계도 허용하지 않습니다.** §1에 인용한 `IMGPF_IN
 
 > Linux (like most other modern UNIX systems) ignores the set-user-ID and set-group-ID bits on scripts.
 >
-> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-06)
+> **번역** — Linux는 (현대의 다른 대부분의 UNIX 시스템과 마찬가지로) 스크립트에 붙은 set-user-ID·set-group-ID 비트를 무시합니다.
+>
+> — [`execve(2)`, Linux man-pages 6.18](https://man7.org/linux/man-pages/man2/execve.2.html) (확인: 2026-09-07)
 
 XNU에는 켜고 끄는 스위치가 있지만 기본값이 꺼짐이고, 꺼져 있으면 SUID/SGID 비트를 지워 버립니다.
 
@@ -511,7 +545,7 @@ static int sugid_scripts = 0;
 	}
 ```
 
-— [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c`, 태그 `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) (확인: 2026-09-06)
+— [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c`, 태그 `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) (확인: 2026-09-07)
 
 이 맥의 현재 값도 0이었습니다.
 
@@ -530,13 +564,15 @@ kern.sugid_scripts: 0
 	 */
 ```
 
-— [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c`, 태그 `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) (확인: 2026-09-06)
+— [apple-oss-distributions/xnu, `bsd/kern/kern_exec.c`, 태그 `xnu-11417.140.69`](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/bsd/kern/kern_exec.c) (확인: 2026-09-07)
 
 POSIX RATIONALE에도 이 계열의 함정이 기록으로 남아 있습니다.
 
 > On systems that support set-user-ID scripts, a historical trapdoor has been to link a script to the name `-i`.
 >
-> — [The Open Group Base Specifications Issue 8 (POSIX.1-2024), `sh`, RATIONALE](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-06)
+> **번역** — set-user-ID 스크립트를 지원하는 시스템에서, 역사적으로 알려진 뒷문 하나는 스크립트를 `-i`라는 이름으로 링크해 두는 것이었습니다.
+>
+> — [The Open Group Base Specifications Issue 8 (POSIX.1-2024), `sh`, RATIONALE](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-07)
 
 같은 절이 "There are other problems with set-user-ID scripts that the two approaches described here do not resolve"라고 덧붙입니다. **권한이 필요한 자리에서는 스크립트가 아니라 컴파일된 바이너리나 `sudo` 규칙을 쓰는 것이 정석입니다**(의견).
 
@@ -554,4 +590,4 @@ POSIX RATIONALE에도 이 계열의 함정이 기록으로 남아 있습니다.
 
 ---
 
-*작성일: 2026-09-06*
+*작성일: 2026-09-07*

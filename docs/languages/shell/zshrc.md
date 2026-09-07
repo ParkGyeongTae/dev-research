@@ -4,6 +4,12 @@ sidebar_position: 7
 
 # `.zshrc`란 무엇인가 — 다섯 개의 시작 파일 중 대화형에만 걸리는 것
 
+> **원문** — 로컬 `man zshall` (zsh 5.9, 2022-05-14 판) · macOS 번들 `/etc/zprofile`·`/etc/zshrc`
+>
+> **확인 날짜** — 2026-09-07. 매뉴얼에는 판번호가 있고(zsh 5.9), 애플이 넣은 전역 시작 파일에는 판번호가 없어 파일 내용을 그대로 옮기고 확인 날짜로 대신합니다.
+>
+> **검증 상태** — 매뉴얼의 STARTUP/SHUTDOWN FILES 절과 `/etc/zshenv` 관련 경고를 읽고 정리했습니다. 매뉴얼 전문을 통독하지는 않았습니다. 다섯 파일의 로딩 순서·`PATH` 동작은 **격리된 `HOME`/`ZDOTDIR`에서 직접 돌린 결과**이며, 이전 판에서 "Docker 미동작으로 미실행"이던 **리눅스 대조를 이번에 컨테이너로 채웠습니다**(§6).
+
 맥의 기본 로그인 셸이 zsh이 되면서, 예전에 `.bash_profile`에 넣던 것을 그대로 `.zshrc`로 옮긴 경우가 많습니다.
 그런데 zsh의 시작 파일은 **다섯 개**이고, 각각 읽히는 조건이 다릅니다.
 
@@ -49,8 +55,14 @@ $ for f in .zshenv .zprofile .zshrc .zlogin .zlogout; do
 > When a login shell exits, the files `$ZDOTDIR/.zlogout` and then `/etc/zlogout` are read.
 
 > If `ZDOTDIR` is unset, `HOME` is used instead.
-
-— 로컬 `man zshall` (zsh 5.9, 2022-05-14 판), macOS 15.7.4에서 확인 (2026-09-06)
+>
+> **번역** — 명령은 먼저 `/etc/zshenv`에서 읽습니다. 이것은 무효화할 수 없습니다. (…) 그다음 `$ZDOTDIR/.zshenv`에서 읽습니다. 셸이 로그인 셸이면 `/etc/zprofile`, 이어서 `$ZDOTDIR/.zprofile`에서 읽습니다. 그다음, 셸이 대화형이면 `/etc/zshrc`, 이어서 `$ZDOTDIR/.zshrc`에서 읽습니다. 마지막으로, 셸이 로그인 셸이면 `/etc/zlogin`과 `$ZDOTDIR/.zlogin`을 읽습니다.
+>
+> **번역** — 로그인 셸이 끝날 때는 `$ZDOTDIR/.zlogout`, 이어서 `/etc/zlogout`을 읽습니다.
+>
+> **번역** — `ZDOTDIR`이 설정돼 있지 않으면 `HOME`을 대신 씁니다.
+>
+> — 로컬 `man zshall` (zsh 5.9, 2022-05-14 판), macOS 15.7.4에서 확인 (2026-09-07)
 
 정리하면 이렇습니다.
 
@@ -205,7 +217,7 @@ hi from mytool
 
 ```
 $ env -i HOME="$SB" ZDOTDIR="$SB" PATH=/usr/bin:/bin "$SB/job.zsh"
-/…/tmp.uQl1FqDSZI/job.zsh:2: command not found: mytool
+/…/tmp.uVwmO2yHn6/job.zsh:2: command not found: mytool
 ```
 
 `.zshenv`로 옮기면 양쪽 다 됩니다. §1의 표에서 `.zshenv`만 "항상"이기 때문입니다.
@@ -228,14 +240,14 @@ hi from mytool
 
 ```
 $ env -i HOME="$SB" ZDOTDIR="$SB" TERM=dumb PATH=/usr/bin:/bin /bin/zsh -i -c 'echo $PATH'
-/…/tmp.uQl1FqDSZI/mybin:/usr/bin:/bin
+/…/tmp.uVwmO2yHn6/mybin:/usr/bin:/bin
 ```
 
 로그인 셸:
 
 ```
 $ env -i HOME="$SB" ZDOTDIR="$SB" TERM=dumb PATH=/usr/bin:/bin /bin/zsh -l -i -c 'echo $PATH'
-/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/…/tmp.uQl1FqDSZI/mybin
+/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/…/tmp.uVwmO2yHn6/mybin
 ```
 
 **맨 앞에 있던 `mybin`이 맨 뒤로 갔습니다.**
@@ -259,6 +271,55 @@ $ cat /etc/paths
 
 §5와 증상의 성격이 다릅니다. 여기서는 `command not found`가 아니라 **`/usr/bin`의 옛날 것이 먼저 잡힙니다.** 명령은 실행되고 결과만 다릅니다.
 
+### 리눅스에서는 이 일이 일어나지 않습니다
+
+§6이 zsh의 성질인지 macOS의 성질인지가 중요합니다. **완전히 같은 실험을 Debian 컨테이너에서 돌렸습니다.**
+
+```console
+$ docker run --rm -v "$SB":/zl debian:trixie-slim sh -c '
+    apt-get update >/dev/null 2>&1; apt-get install -y zsh >/dev/null 2>&1
+    printf "비로그인 : "; env -i HOME=/zl ZDOTDIR=/zl TERM=dumb PATH=/usr/bin:/bin zsh -i  -c "echo \$PATH" | tail -1
+    printf "로그인   : "; env -i HOME=/zl ZDOTDIR=/zl TERM=dumb PATH=/usr/bin:/bin zsh -l -i -c "echo \$PATH" | tail -1'
+비로그인 : /zl/mybin:/usr/bin:/bin
+로그인   : /zl/mybin:/usr/bin:/bin
+```
+
+**리눅스에서는 로그인 셸에서도 `mybin`이 맨 앞에 그대로 있습니다.** 맥에서는 맨 뒤로 밀렸던 그 실험입니다.
+
+원인은 `path_helper`가 없다는 것입니다.
+
+```console
+$ docker run --rm debian:trixie-slim sh -c 'ls -l /usr/libexec/path_helper'
+ls: cannot access '/usr/libexec/path_helper': No such file or directory
+```
+
+전역 시작 파일의 위치도 다릅니다.
+
+```console
+$ docker run --rm debian:trixie-slim sh -c 'apt-get update >/dev/null 2>&1; apt-get install -y zsh >/dev/null 2>&1; zsh --version; ls -l /etc/zshenv /etc/zsh/zshenv /etc/zsh/zprofile /etc/zsh/zshrc 2>&1'
+zsh 5.9 (aarch64-unknown-linux-gnu)
+ls: cannot access '/etc/zshenv': No such file or directory
+-rw-r--r-- 1 root root  264 Sep  7  2023 /etc/zsh/zprofile
+-rw-r--r-- 1 root root  623 Sep  7  2023 /etc/zsh/zshenv
+-rw-r--r-- 1 root root 3900 Jan  9  2024 /etc/zsh/zshrc
+```
+
+**같은 zsh 5.9인데 전역 파일이 `/etc/zsh/` 아래 있습니다.** 맥은 `/etc/zprofile`·`/etc/zshrc`로 `/etc` 바로 아래입니다. 파일 **순서**(§1)는 zsh의 성질이라 양쪽이 같지만, **어느 경로에서 읽는가와 그 안에 무엇이 들어 있는가**는 배포판이 정합니다.
+
+그리고 파일 순서 자체는 리눅스에서도 그대로였습니다.
+
+```console
+$ docker run --rm -v "$SB":/zl debian:trixie-slim sh -c '… env -i HOME=/zl ZDOTDIR=/zl TERM=dumb zsh -l -i -c "echo \"  -- 본문\""'
+  [read] .zshenv
+  [read] .zprofile
+  [read] .zshrc
+  [read] .zlogin
+  -- 본문
+  [read] .zlogout
+```
+
+즉 **§1~§3은 zsh의 성질이고, §4·§6은 macOS의 성질입니다.** 이 구분을 놓치면 리눅스 서버에서 있지도 않은 `path_helper` 문제를 찾게 됩니다.
+
 ### 셋 다 무언가를 포기합니다
 
 §5와 §6을 합치면 맥에서 `PATH`가 놓이는 구도가 이렇습니다. (의견 포함)
@@ -276,8 +337,10 @@ $ cat /etc/paths
 `.zshenv`가 유일하게 "항상" 읽힌다는 성질에는 대가가 붙습니다. **스크립트 한 줄을 돌릴 때도 읽힙니다.** 매뉴얼이 이 점을 직접 경고합니다.
 
 > As `/etc/zshenv` is run for all instances of zsh, it is important that it be kept as small as possible. In particular, it is a good idea to put code that does not need to be run for every single shell behind a test of the form `if [[ -o rcs ]]; then ...` so that it will not be executed when zsh is invoked with the `-f' option.
-
-— 로컬 `man zshall` (zsh 5.9), 2026-09-06 확인
+>
+> **번역** — `/etc/zshenv`는 zsh의 모든 인스턴스에서 실행되므로, 가능한 한 작게 유지하는 것이 중요합니다. 특히, 모든 셸마다 실행될 필요가 없는 코드는 `if [[ -o rcs ]]; then ...` 형태의 검사 뒤에 두어, zsh가 `-f` 옵션과 함께 호출될 때는 실행되지 않게 하는 것이 좋습니다.
+>
+> — 로컬 `man zshall` (zsh 5.9), 2026-09-07 확인
 
 경고 대상은 `/etc/zshenv`지만 이유는 `~/.zshenv`에도 그대로 적용됩니다. 여기에 버전 매니저 초기화나 자동완성 로딩을 넣으면 **zsh을 호출하는 모든 스크립트가 그만큼 느려집니다.** 반복문 안에서 `zsh -c`를 부르는 파이프라인이라면 누적됩니다.
 
@@ -297,18 +360,20 @@ $ cat /etc/paths
 
 ### 이 문서가 그대로 적용되지 않는 자리
 
-- **리눅스 서버.** §4·§6은 애플이 넣은 `/etc/zprofile`과 `path_helper`에 전적으로 의존합니다. `path_helper`는 macOS 전용이므로, 리눅스에서는 §6의 `PATH` 뒤집힘이 **일어나지 않습니다.** §1~§3(파일 순서)만 공통입니다.
+- **리눅스 서버.** §4·§6은 애플이 넣은 `/etc/zprofile`과 `path_helper`에 전적으로 의존합니다. §6의 리눅스 대조에서 확인했듯 `path_helper`는 macOS 전용이라 **리눅스에서는 `PATH` 뒤집힘이 일어나지 않고**, 전역 파일도 `/etc/zsh/` 아래에 있습니다. §1~§3(파일 순서)만 공통입니다.
 - **터미널 앱 설정에 따라 로그인 셸 여부가 갈립니다.** 어떤 터미널은 새 탭을 로그인 셸로, 어떤 것은 비로그인으로 띄웁니다. 그래서 §2(a)와 §2(b) 중 어느 쪽인지가 사람마다 다르고, "내 맥에서는 되는데"가 나옵니다. 판별은 `[[ -o login ]] && echo login || echo non-login`으로 합니다.
 - **프레임워크를 쓰고 있다면 `.zshrc`의 통제권이 나눠집니다.** Oh My Zsh 같은 것을 설치하면 `.zshrc`가 템플릿으로 교체되고, 그 안에서 다시 다른 파일들을 `source` 합니다. 이 문서의 실측은 프레임워크가 없는 상태(`env -i` + 빈 임시 홈)에서 나온 것이라 그 층은 포함하지 않습니다.
 - **배치 파이프라인의 재현성 문제.** `.zshrc`를 튜닝해서 얻을 수 있는 것은 대화형 경험뿐입니다. 스크립트는 애초에 이 파일을 읽지 않습니다(§2c).
 
-## 9. 확인하지 못한 것
+## 확인하지 못한 것
 
 - **`.zshenv`가 유발하는 실제 지연 시간.** §7. 측정하지 않았습니다. **미실행.**
-- **리눅스에서의 시작 파일 동작.** 문서(매뉴얼)로만 확인했고 리눅스에서 돌려보지 못했습니다. (이 머신에 docker CLI는 있으나 데몬이 떠 있지 않습니다.) **미실행.**
-- **zsh 5.9 이후 판.** 이 맥의 zsh은 5.9(매뉴얼 2022-05-14 판)입니다. 상위 프로젝트의 최신 매뉴얼에서 이 절이 바뀌었는지는 대조하지 않았습니다. **확인 필요.**
+- **리눅스 대조는 배포판 하나에서만 했습니다.** §6의 리눅스 결과는 `debian:trixie-slim`에 `apt-get install zsh`로 넣은 zsh 5.9 하나에서 나왔습니다. 다른 배포판이 `/etc/zsh/` 아래에 무엇을 넣는지, `path_helper`에 해당하는 장치를 두는지는 확인하지 않았습니다.
+- **`/etc/zsh/zshenv`·`zprofile`·`zshrc`의 내용.** §6에서 파일이 존재한다는 것과 크기만 확인했고, 안에 무엇이 들어 있는지는 열어 보지 않았습니다. **확인 필요.**
+- **zsh 5.9 이후 판.** 이 문서의 실행 기록은 맥의 5.9(매뉴얼 2022-05-14 판)와 Debian의 5.9에서 나왔습니다. 상위 판에서 이 절이 바뀌었는지는 대조하지 않았습니다. **확인 필요.**
 - **`GLOBAL_RCS`를 꺼서 `path_helper`를 피하는 방법.** 매뉴얼에 `unsetopt GLOBAL_RCS`로 전역 파일을 건너뛸 수 있다고 돼 있으나, 그렇게 하면 `/etc/zshrc`의 히스토리 설정 등도 함께 사라집니다. 부작용 범위를 다 확인하지 못해 §6의 대안으로 제시하지 않았습니다. **확인 필요.**
+- **터미널 앱이 새 탭을 로그인 셸로 띄우는지.** §8에서 "앱마다 다르다"고 적었으나 이 맥의 터미널 앱들로 확인하지 않았습니다. **미실행.**
 
 ---
 
-*작성일: 2026-09-06*
+*작성일: 2026-09-07*

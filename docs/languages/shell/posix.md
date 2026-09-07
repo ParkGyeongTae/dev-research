@@ -4,6 +4,12 @@ sidebar_position: 1
 
 # POSIX란 무엇인가 — 규격이 정한 것과, 일부러 정하지 않은 것
 
+> **원문** — [The Open Group Base Specifications Issue 8, IEEE Std 1003.1-2024](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html)
+>
+> **확인 날짜** — 2026-09-07. 규격에는 판번호가 있습니다(Issue 8 = POSIX.1-2024 = IEEE Std 1003.1-2024). 대조에 쓴 Issue 7(POSIX.1-2017)·Issue 6(2001) 페이지도 판번호가 있고, The Open Group 인증 등록부는 판번호가 없어 확인 날짜로 대신합니다.
+>
+> **검증 상태** — Base Definitions 1장·2장·1.6 Terminology와 Shell Command Language 2.2·2.9.1을 읽고 정리했습니다. 규격 전문을 통독하지는 않았습니다. `getconf`·셸 동작은 **macOS와 Debian 컨테이너 양쪽에서 직접 돌린 결과**이며, 이전 판에서 "Docker 미동작으로 미실행"이던 리눅스 `getconf` 값을 이번에 채웠습니다.
+
 POSIX는 **운영체제가 프로그램에게 보여 주는 인터페이스를 글로 적어 둔 문서**입니다.
 소프트웨어가 아니고, 운영체제도 아니고, 리눅스의 표준도 아닙니다. 문서입니다 — 다만 판번호가 붙고, 인증 제도가 딸려 있고, **그것을 지켰는지 시스템이 스스로 보고하도록** 정해 둔 문서입니다.
 
@@ -35,7 +41,15 @@ $ /bin/zsh --version
 zsh 5.9 (arm64-apple-darwin24.0)
 ```
 
-리눅스에서는 돌려보지 못했습니다. 리눅스에 대한 서술은 모두 문서 인용이고, 그렇다고 표시했습니다(§9).
+대조용 리눅스는 컨테이너로 띄웠습니다.
+
+```
+$ docker run --rm debian:trixie-slim sh -c 'cat /etc/debian_version; uname -m'
+13.6
+aarch64
+```
+
+이미지는 `debian:trixie-slim@sha256:d7e12182…`, Docker 29.3.1(Docker Desktop, aarch64 linuxkit 커널)입니다. 실행 날짜는 양쪽 다 2026-09-07입니다.
 
 ---
 
@@ -44,8 +58,10 @@ zsh 5.9 (arm64-apple-darwin24.0)
 규격이 스스로 밝히는 목적입니다.
 
 > POSIX.1-2024 defines a standard operating system interface and environment, including a command interpreter (or "shell"), and common utility programs to support applications portability at the source code level. It is intended to be used by both application developers and system implementors.
-
-— [The Open Group Base Specifications Issue 8, Base Definitions, 1. Introduction](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-06)
+>
+> **번역** — POSIX.1-2024는 표준 운영체제 인터페이스와 환경을 정의합니다. 여기에는 명령 해석기(이른바 "셸")와, 소스 코드 수준의 응용 프로그램 이식성을 뒷받침하는 공통 유틸리티 프로그램이 포함됩니다. 응용 프로그램 개발자와 시스템 구현자 양쪽이 쓰도록 만든 것입니다.
+>
+> — [The Open Group Base Specifications Issue 8, Base Definitions, 1. Introduction](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-07)
 
 두 군데를 붙잡아 두면 나머지가 따라옵니다.
 
@@ -74,7 +90,7 @@ zsh 5.9 (arm64-apple-darwin24.0)
 | SUS(Single UNIX Specification) | 인증 제도 쪽에서 부르는 이름 |
 
 발행 페이지 제목이 그대로 이 사실을 보여 줍니다 — "The Open Group Base Specifications Issue 8 / IEEE Std 1003.1-2024 Edition".
-— [The Open Group Base Specifications Issue 8](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-06)
+— [The Open Group Base Specifications Issue 8](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-07)
 
 그래서 **"Issue 8"과 "POSIX.1-2024"가 같은 말**이고, 뒤에 나올 "Issue 6"은 "POSIX.1-2001"과 같은 말입니다. 자료마다 다른 이름을 쓰기 때문에 판을 대조할 때 이 표가 필요합니다.
 
@@ -89,7 +105,7 @@ POSIX.1-2024는 네 권으로 나뉩니다.
 | Shell and Utilities | **셸 언어와 명령줄 유틸리티** (`sh`, `awk`, `sed`, `grep` …) |
 | Rationale (Informative) | 왜 이렇게 정했는지 — **규범이 아님** |
 
-— [The Open Group Base Specifications Issue 8](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-06)
+— [The Open Group Base Specifications Issue 8](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-07)
 
 두 가지를 여기서 챙깁니다.
 
@@ -111,8 +127,14 @@ POSIX.1-2024는 네 권으로 나뉩니다.
 > **should**: For an implementation that conforms to POSIX.1-2024, describes a feature or behavior that is recommended but not mandatory
 >
 > **may**: Describes a feature or behavior that is optional for an implementation that conforms to POSIX.1-2024
-
-— [The Open Group Base Specifications Issue 8, Base Definitions, 1.6 Terminology](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-06)
+>
+> **번역** — **shall**: POSIX.1-2024를 준수하는 구현에서, 필수인 기능 또는 동작을 기술합니다.
+>
+> **should**: POSIX.1-2024를 준수하는 구현에서, 권장되지만 필수는 아닌 기능 또는 동작을 기술합니다.
+>
+> **may**: POSIX.1-2024를 준수하는 구현에서 선택 사항인 기능 또는 동작을 기술합니다.
+>
+> — [The Open Group Base Specifications Issue 8, Base Definitions, 1.6 Terminology](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-07)
 
 실무에서 쓰는 방법은 단순합니다. **규격 문장을 읽을 때 동사 앞의 단어부터 봅니다.**
 `shall`이 붙어 있으면 그 시스템이 준수를 주장하는 한 기대해도 됩니다. `should`나 `may`가 붙어 있으면 **구현마다 다를 수 있다는 뜻**이고, 그 위에 코드를 올리면 안 됩니다.
@@ -128,8 +150,14 @@ POSIX.1-2024는 네 권으로 나뉩니다.
 > **undefined**: Describes the nature of a value or behavior not defined by POSIX.1-2024 which results from use of an **invalid** program construct or invalid data input
 >
 > **implementation-defined**: Describes a value or behavior that is not defined by POSIX.1-2024 but is **selected by an implementor**
-
-— [The Open Group Base Specifications Issue 8, Base Definitions, 1.6 Terminology](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-06)
+>
+> **번역** — **unspecified**: **유효한** 프로그램 구성이나 유효한 데이터 입력을 사용한 결과로 나오는, POSIX.1-2024가 규정하지 않은 값 또는 동작의 성질을 기술합니다.
+>
+> **undefined**: **유효하지 않은** 프로그램 구성이나 유효하지 않은 데이터 입력을 사용한 결과로 나오는, POSIX.1-2024가 정의하지 않은 값 또는 동작의 성질을 기술합니다.
+>
+> **implementation-defined**: POSIX.1-2024가 정의하지 않되 **구현자가 고르는** 값 또는 동작을 기술합니다.
+>
+> — [The Open Group Base Specifications Issue 8, Base Definitions, 1.6 Terminology](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap01.html) (확인: 2026-09-07)
 
 셋의 차이를 실무 언어로 옮기면 이렇습니다.
 
@@ -153,13 +181,15 @@ $ for sh in /bin/bash /bin/dash /bin/zsh; do printf '%-10s ' "$sh"; "$sh" -c 'f(
 셋 다 됩니다. 그래서 "이건 이식성 있다"고 굳어집니다. 그런데 규격을 펴 보면 `local`은 **없는 것이 아니라, 결과를 정하지 않겠다고 명시된 이름**입니다.
 
 > If the command name matches the name of a utility listed in the following table, the results are unspecified.
+>
+> **번역** — 명령 이름이 아래 표에 나열된 유틸리티의 이름과 일치하면, 그 결과는 규정되지 않습니다.
 
 이 표에 `local`이 `declare`·`typeset`·`integer`·`source`·`shopt` 등과 함께 들어 있습니다. Issue 7·Issue 8 양쪽 다 같습니다.
-— [The Open Group Base Specifications Issue 8, Shell Command Language, 2.9.1.4 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) (확인: 2026-09-06)
-— [The Open Group Base Specifications Issue 7 (POSIX.1-2017), Shell Command Language, 2.9.1 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) (확인: 2026-09-06)
+— [The Open Group Base Specifications Issue 8, Shell Command Language, 2.9.1.4 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) (확인: 2026-09-07)
+— [The Open Group Base Specifications Issue 7 (POSIX.1-2017), Shell Command Language, 2.9.1 Command Search and Execution](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) (확인: 2026-09-07)
 
 유틸리티 색인에도 `local` 항목은 없습니다 — `ln`·`locale`·`localedef`·`logger`로 이어집니다.
-— [The Open Group Base Specifications Issue 8, Utilities 색인](https://pubs.opengroup.org/onlinepubs/9799919799/idx/utilities.html) (확인: 2026-09-06)
+— [The Open Group Base Specifications Issue 8, Utilities 색인](https://pubs.opengroup.org/onlinepubs/9799919799/idx/utilities.html) (확인: 2026-09-07)
 
 **"세 구현에서 다 된다"와 "규격이 보장한다"는 다른 이야기입니다.** 규격은 이 이름을 알고 있으면서도 결과를 미정의로 남겼고, 세 구현의 동작이 겹치는 것은 구현끼리의 우연입니다.
 
@@ -173,7 +203,7 @@ $ for sh in /bin/bash /bin/dash /bin/zsh; do printf '%-10s ' "$sh"; "$sh" -c 'f(
 - **XSI 옵션**: POSIX 준수 위에 얹는 확장 묶음입니다. XSI를 주장하려면 `_XOPEN_UNIX`를 정의하고 `_XOPEN_VERSION`을 보고해야 합니다. 규격 본문에서 `[XSI]` 표시가 붙은 부분이 여기 해당합니다.
 - **옵션의 지원 여부는 심볼릭 상수로 드러납니다.** 값이 양수면 항상 지원, `-1`이거나 정의돼 있지 않으면 미지원, `0`이면 런타임에 `sysconf()`·`getconf`로 물어봐야 하는 경우입니다.
 
-— [The Open Group Base Specifications Issue 8, Base Definitions, 2. Conformance](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap02.html) (확인: 2026-09-06)
+— [The Open Group Base Specifications Issue 8, Base Definitions, 2. Conformance](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap02.html) (확인: 2026-09-07)
 
 **이 규칙 덕분에 "이 시스템이 뭘 지원하는가"를 추측하지 않고 물어볼 수 있습니다.** `getconf`가 그 창구입니다.
 
@@ -187,6 +217,25 @@ _POSIX_PRIORITY_SCHEDULING     undefined
 ```
 
 같은 시스템에서 어떤 옵션은 판번호를 돌려주고(지원), 어떤 옵션은 `undefined`를 돌려줍니다(미지원). **POSIX 준수 시스템이라고 해서 규격의 모든 기능을 갖춘 것이 아니라는 사실이 이 한 줄에 그대로 나옵니다.**
+
+같은 질문을 리눅스에 던지면 답이 다릅니다.
+
+```
+$ docker run --rm debian:trixie-slim sh -c 'for o in _POSIX_VERSION _POSIX2_VERSION _XOPEN_VERSION _POSIX_THREADS _POSIX_SPAWN _POSIX_ASYNCHRONOUS_IO _POSIX_PRIORITY_SCHEDULING; do printf "%-30s " "$o"; getconf "$o" 2>&1; done'
+_POSIX_VERSION                 200809
+_POSIX2_VERSION                getconf: Unrecognized variable `_POSIX2_VERSION'
+_XOPEN_VERSION                 700
+_POSIX_THREADS                 200809
+_POSIX_SPAWN                   200809
+_POSIX_ASYNCHRONOUS_IO         200809
+_POSIX_PRIORITY_SCHEDULING     200809
+```
+
+세 가지가 한꺼번에 드러납니다.
+
+- **판번호가 다릅니다.** 맥은 `200112`, 이 Debian은 `200809`입니다 — 다음 절에서 다룹니다.
+- **맥에서 `undefined`이던 옵션이 리눅스에서는 지원됩니다.** `_POSIX_ASYNCHRONOUS_IO`·`_POSIX_PRIORITY_SCHEDULING` 둘 다 그렇습니다. **인증받은 UNIX(맥)가 인증 없는 리눅스보다 옵션을 덜 갖고 있습니다** — §6에서 이 구도를 다시 봅니다.
+- **`getconf`가 아는 변수 이름조차 다릅니다.** `_POSIX2_VERSION`은 맥에서는 값을 돌려주는데 이 Debian의 glibc `getconf`는 그런 변수를 모른다고 답합니다. 즉 **"물어보는 창구"까지 구현마다 갈립니다.**
 
 ## 5. 어느 판을 따르는지도 시스템이 보고합니다
 
@@ -205,27 +254,50 @@ $ getconf _XOPEN_VERSION
 
 이 숫자가 어느 판인지는 규격이 직접 못 박습니다.
 
-| 판 | `_POSIX_VERSION` | `_XOPEN_VERSION` | 근거 |
-| --- | --- | --- | --- |
-| Issue 6 (IEEE Std 1003.1-2001) | `200112L` | `600` | [Issue 6 `<unistd.h>`](https://pubs.opengroup.org/onlinepubs/009695399/basedefs/unistd.h.html) (확인: 2026-09-06) |
-| Issue 8 (POSIX.1-2024) | `202405L` | `800` | [Issue 8 `<unistd.h>`](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/unistd.h.html) (확인: 2026-09-06) |
-
 > For implementations conforming to IEEE Std 1003.1-2001, the value shall be 200112L.
-
-> For implementations conforming to POSIX.1-2024, the value shall be 202405L.
+>
+> **번역** — IEEE Std 1003.1-2001을 준수하는 구현에서는, 그 값이 200112L이어야 합니다.
+>
+> — [The Open Group Base Specifications Issue 6, `<unistd.h>`](https://pubs.opengroup.org/onlinepubs/009695399/basedefs/unistd.h.html) (확인: 2026-09-07)
 
 즉 이 시스템이 준수한다고 보고하는 것은 **2001년 판(Issue 6)** 이고, 2024년 판이 아닙니다.
 
-여기서 일반화할 것은 맥에 대한 사실이 아니라 **"POSIX에 있다"가 곧 "이 시스템에 있다"는 뜻이 아니라는 것**입니다. 규격은 판이 올라가면서 내용이 늘어나는데, 시스템이 따르는 판은 그보다 뒤처져 있을 수 있습니다.
+리눅스도 최신판은 아닙니다. 다만 **다른 판에 서 있습니다.**
+
+```
+$ docker run --rm debian:trixie-slim sh -c 'getconf _POSIX_VERSION; getconf _XOPEN_VERSION'
+200809
+700
+```
+
+`200809`/`700`은 **Issue 7(POSIX.1-2008, 2017년 개정판)** 입니다. 규격이 그렇게 못 박고 있습니다.
+
+> For implementations conforming to POSIX.1-2017, the value shall be 200809L.
+>
+> **번역** — POSIX.1-2017을 준수하는 구현에서는, 그 값이 200809L이어야 합니다.
+>
+> — [The Open Group Base Specifications Issue 7, `<unistd.h>`](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html) (확인: 2026-09-07)
+
+| 판 | `_POSIX_VERSION` | `_XOPEN_VERSION` | 이 문서에서 실측한 시스템 | 근거 |
+| --- | --- | --- | --- | --- |
+| Issue 6 (IEEE Std 1003.1-2001) | `200112L` | `600` | **macOS 15.7.4** | [Issue 6 `<unistd.h>`](https://pubs.opengroup.org/onlinepubs/009695399/basedefs/unistd.h.html) (확인: 2026-09-07) |
+| Issue 7 (POSIX.1-2008 / 2017) | `200809L` | `700` | **Debian 13.6** | [Issue 7 `<unistd.h>`](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html) (확인: 2026-09-07) |
+| Issue 8 (POSIX.1-2024) | `202405L` | `800` | **없음** | [Issue 8 `<unistd.h>`](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/unistd.h.html) (확인: 2026-09-07) |
+
+**이 문서가 손댈 수 있었던 두 시스템 중 어느 쪽도 Issue 8을 주장하지 않습니다.** 그런데 이 문서가 인용해 온 규격 본문은 전부 Issue 8입니다.
+
+여기서 일반화할 것은 맥에 대한 사실이 아니라 **"POSIX에 있다"가 곧 "이 시스템에 있다"는 뜻이 아니라는 것**입니다. 규격은 판이 올라가면서 내용이 늘어나는데, 시스템이 따르는 판은 그보다 뒤처져 있을 수 있습니다. 그리고 뒤처진 정도가 **시스템마다 다릅니다** — 맥은 23년 전 판, 이 Debian은 16년 전 판입니다.
 
 ### 판 차이가 값을 바꾸는 실제 사례
 
 `$'...'`(달러-작은따옴표 인용)가 정확히 그런 예입니다. **Issue 7에는 없고 Issue 8에서 들어왔습니다.** Issue 7의 Quoting 절은 백슬래시·작은따옴표·큰따옴표 셋뿐이고, Issue 8에는 `2.2.4 Dollar-Single-Quotes`가 추가돼 있습니다.
 
 > A sequence of characters starting with a `<dollar-sign>` immediately followed by a single-quote ($') shall preserve the literal value of all characters up to an unescaped terminating single-quote ('), with the exception of certain `<backslash>`-escape sequences, as follows:
+>
+> **번역** — `<dollar-sign>` 바로 뒤에 작은따옴표가 오는 것으로 시작하는 문자열($')은, 이스케이프되지 않은 종료 작은따옴표(')까지의 모든 문자의 리터럴 값을 보존해야 합니다. 다만 아래에 열거하는 일부 `<backslash>` 이스케이프 시퀀스는 예외입니다.
 
-— [The Open Group Base Specifications Issue 8, Shell Command Language, 2.2.4 Dollar-Single-Quotes](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) (확인: 2026-09-06)
-— Issue 7의 2.2 Quoting에는 이 항목이 없습니다. [The Open Group Base Specifications Issue 7, Shell Command Language, 2.2 Quoting](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) (확인: 2026-09-06)
+— [The Open Group Base Specifications Issue 8, Shell Command Language, 2.2.4 Dollar-Single-Quotes](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) (확인: 2026-09-07)
+— Issue 7의 2.2 Quoting에는 이 항목이 없습니다. [The Open Group Base Specifications Issue 7, Shell Command Language, 2.2 Quoting](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) (확인: 2026-09-07)
 
 그래서 `$'...'`를 "POSIX 문법"이라고 부르는 것은 맞지만, **Issue 6·7 기준으로 만들어진 구현에는 없습니다.** 네 셸에 같은 스크립트를 넣어 봤습니다.
 
@@ -253,9 +325,9 @@ $ for sh in /bin/sh /bin/bash /bin/dash /bin/zsh; do printf '%-10s ' "$sh"; "$sh
 The Open Group은 규격을 발행할 뿐 아니라 **UNIX라는 등록 상표의 인증 제도**를 운영합니다. 시험을 통과하고 등록해야 제품을 "UNIX"라고 부를 수 있습니다.
 
 - 등록부에서 확인한 애플 항목: **macOS 15.0 Sequoia**와 **macOS 26.0 Tahoe**가 Apple silicon·Intel 양쪽 모두 **UNIX 03**을 포함한 다섯 개 표준에 등록돼 있습니다.
-  — [The Open Group, Open Brand Register — Apple Inc.](https://www.opengroup.org/openbrand/register/apple.htm) (확인: 2026-09-06)
-- 2026-09-06 시점의 등록부 전체 목록에는 **Apple(macOS)·IBM(z/OS, AIX)·HPE(HP-UX)·SCO(UnixWare, OpenServer)만** 있습니다. **리눅스 배포판은 없습니다.**
-  — [The Open Group, The Register of UNIX Certified Products](https://www.opengroup.org/openbrand/register/) (확인: 2026-09-06)
+  — [The Open Group, Open Brand Register — Apple Inc.](https://www.opengroup.org/openbrand/register/apple.htm) (확인: 2026-09-07)
+- 2026-09-07 시점의 등록부 전체 목록에는 **Apple(macOS)·IBM(z/OS, AIX)·HPE(HP-UX)·SCO(UnixWare, OpenServer)만** 있습니다. **리눅스 배포판은 없습니다.**
+  — [The Open Group, The Register of UNIX Certified Products](https://www.opengroup.org/openbrand/register/) (확인: 2026-09-07)
 
 그래서 정확한 문장은 이렇게 됩니다.
 
@@ -275,8 +347,10 @@ The Open Group은 규격을 발행할 뿐 아니라 **UNIX라는 등록 상표�
 `sh` 유틸리티 페이지가 직접 경고합니다.
 
 > Applications should note that the standard PATH to the shell cannot be assumed to be either /bin/sh or /usr/bin/sh, and should be determined by interrogation of the PATH returned by getconf PATH.
-
-— [The Open Group Base Specifications Issue 8, `sh`](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-06)
+>
+> **번역** — 응용 프로그램은, 셸에 이르는 표준 PATH가 /bin/sh나 /usr/bin/sh 중 하나라고 가정할 수 없으며 `getconf PATH`가 돌려주는 PATH를 조회해 판단해야 한다는 점에 유의해야 합니다.
+>
+> — [The Open Group Base Specifications Issue 8, `sh`](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-07)
 
 규격이 정하는 것은 **`sh`라는 이름의 유틸리티가 표준 PATH 어딘가에 있다**는 것까지입니다.
 
@@ -288,12 +362,19 @@ $ env PATH="$(getconf PATH)" command -v sh
 /bin/sh
 ```
 
-이 시스템에서는 결과적으로 `/bin/sh`가 맞았습니다. 하지만 그것은 **이 시스템의 사실**이지 규격의 보장이 아닙니다.
+이 시스템에서는 결과적으로 `/bin/sh`가 맞았습니다. 하지만 그것은 **이 시스템의 사실**이지 규격의 보장이 아닙니다. 리눅스에서는 표준 PATH 자체가 다릅니다.
+
+```
+$ docker run --rm debian:trixie-slim sh -c 'getconf PATH'
+/bin:/usr/bin
+```
+
+**맥은 `/usr/bin:/bin:/usr/sbin:/sbin`, 이 Debian은 `/bin:/usr/bin`입니다.** 목록도 순서도 다릅니다. 규격이 `getconf PATH`로 물어보라고 한 이유가 여기 있습니다 — 어느 쪽을 상수로 박아 넣어도 다른 쪽에서 틀립니다.
 
 ### `#!`(shebang)는 규범이 아닙니다
 
 `#!`로 해석자를 지정하는 방식은 POSIX가 표준화한 메커니즘이 **아닙니다**. `sh` 페이지는 이 방식을 APPLICATION USAGE 절에서 설치 시 관례로 언급할 뿐인데, §3에서 봤듯 그 절은 **정보성**입니다.
-— [The Open Group Base Specifications Issue 8, `sh`](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-06)
+— [The Open Group Base Specifications Issue 8, `sh`](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-07)
 
 실무에서 `#!`가 안 통하는 시스템을 만날 일은 거의 없습니다. 다만 이것이 §3에서 예고한 함정의 실제 모습입니다 — **규격 페이지 안에 쓰여 있다고 해서 규범인 것이 아니고, "POSIX 스크립트"라는 말이 첫 줄까지 규격화돼 있다는 뜻도 아닙니다.**
 
@@ -302,8 +383,10 @@ $ env PATH="$(getconf PATH)" command -v sh
 규격이 셸 시작 파일에 대해 정하는 것은 이것뿐입니다.
 
 > This variable, when and only when an interactive shell is invoked, shall be subjected to parameter expansion by the shell, and the resulting value shall be used as a pathname of a file containing shell commands to execute in the current environment.
-
-— [The Open Group Base Specifications Issue 8, `sh`](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-06)
+>
+> **번역** — 이 변수는, 대화형 셸이 호출될 때에 한하여, 셸에 의해 매개변수 확장이 적용되어야 하며, 그렇게 나온 값은 현재 환경에서 실행할 셸 명령들이 담긴 파일의 경로명으로 쓰여야 합니다.
+>
+> — [The Open Group Base Specifications Issue 8, `sh`](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) (확인: 2026-09-07)
 
 `~/.profile`·`~/.bashrc`·`~/.zshrc` 같은 이름은 **규격에 없습니다.** 전부 구현체가 각자 정한 관례입니다. 규격이 정한 `ENV` 쪽은 `shall`과 "when and only when"이 붙어 있으므로 그대로 관측됩니다.
 
@@ -335,14 +418,15 @@ $
 
 마지막으로 이 문서 자체에 대한 경계 하나. **규격을 정독하는 것이 셸 스크립트 실력의 지름길은 아닙니다.** 규격은 구현자를 위한 문서입니다. 스크립트를 짜는 쪽에 필요한 것은 "규격에 뭐가 있나"보다 **"내가 쓰는 이 문법이 어느 층에 있나"**(§4(b))이고, 그건 규격 검색과 여러 구현에서의 실행을 함께 해 보는 것이 가장 빠릅니다.
 
-## 9. 확인하지 못한 것
+## 확인하지 못한 것
 
-- **리눅스에서의 `getconf` 값.** 이 문서의 실행 기록은 전부 macOS 15.7.4에서 나왔습니다. 리눅스 배포판이 `_POSIX_VERSION`으로 무엇을 보고하는지는 **미실행**입니다. (이 머신에 docker CLI는 있으나 데몬이 떠 있지 않아 컨테이너로도 확인하지 못했습니다.)
-- **`getconf`의 `undefined` 출력과 규격의 대응.** §4(c)에서 `_POSIX_ASYNCHRONOUS_IO`가 `undefined`를 돌려주는 것은 실측입니다. 이것이 규격이 말하는 "상수가 정의되지 않음(미지원)"과 정확히 같은 상태인지는 macOS `getconf` 구현으로 대조하지 않았습니다. **확인 필요.**
+- **`getconf`의 `undefined` 출력과 규격의 대응.** §4(c)에서 맥의 `_POSIX_ASYNCHRONOUS_IO`가 `undefined`를 돌려주는 것은 실측입니다. 이것이 규격이 말하는 "상수가 정의되지 않음(미지원)"과 정확히 같은 상태인지는 macOS `getconf` 구현으로 대조하지 않았습니다. **확인 필요.**
+- **리눅스 쪽 실측은 배포판 하나에서만 얻었습니다.** Docker Desktop이 띄운 aarch64 linuxkit 커널의 `debian:trixie-slim`(glibc)입니다. 다른 배포판, 특히 **musl 계열(Alpine)의 `getconf` 값은 확인하지 않았습니다.** §4(c)·§5의 숫자를 리눅스 일반으로 읽으면 안 됩니다.
+- **`_POSIX2_VERSION`을 이 Debian의 `getconf`가 모른다는 것**은 실측이지만, 그것이 glibc의 결정인지 Debian의 빌드 설정인지는 소스로 확인하지 않았습니다. **확인 필요.**
 - **UNIX 03 상표와 Issue 6의 정확한 대응.** 이 시스템이 `200112`/`600`을 보고한다는 것(실측)과 macOS가 UNIX 03에 등록돼 있다는 것(등록부 확인)은 각각 확인했습니다. 다만 "UNIX 03 = Issue 6"이라고 못 박은 The Open Group 문장은 찾지 못했습니다. **확인 필요.**
-- **역사적으로 인증받았던 리눅스 제품.** 2026-09-06 시점 등록부에 리눅스가 없다는 것만 확인했습니다. 과거에 등록됐다가 빠진 것이 있는지는 확인하지 못했습니다.
+- **역사적으로 인증받았던 리눅스 제품.** 2026-09-07 시점 등록부 본문에 `linux` 문자열이 하나도 없다는 것만 확인했습니다. 과거에 등록됐다가 빠진 것이 있는지는 확인하지 못했습니다.
 - **POSIX의 성립 역사.** 왜·언제 만들어졌는지는 The Open Group 발행본의 Rationale 권에서 근거 문장을 찾지 못해 쓰지 않았습니다.
 
 ---
 
-*작성일: 2026-09-06*
+*작성일: 2026-09-07*
