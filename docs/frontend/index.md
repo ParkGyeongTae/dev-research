@@ -16,7 +16,6 @@ sidebar_position: 1
 
 - **언어 자체**(JavaScript·TypeScript가 무엇이고 어떻게 실행되는가)는 [언어](../languages/index.md)로 갑니다. 여기서는 그 언어로 **브라우저에서 무엇을 만드는가**만 다룹니다.
 - **서버가 무엇을 내려주는가**는 [백엔드](../backend/index.md)로 갑니다.
-- **차트를 어떻게 그릴 것인가**가 아니라 **무엇을 보여줄 것인가**가 주제라면 [데이터 분석](../data-analytics/index.md)이 맞습니다.
 
 ---
 

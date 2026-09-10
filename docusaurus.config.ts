@@ -95,7 +95,6 @@ const config: Config = {
             { to: '/backend/', label: '백엔드' },
             { to: '/frontend/', label: '프론트엔드' },
             { to: '/data-engineering/', label: '데이터 엔지니어링' },
-            { to: '/data-analytics/', label: '데이터 분석' },
             { to: '/infrastructure/', label: '인프라' },
             { to: '/database/', label: '데이터베이스' },
             { to: '/llm/', label: 'LLM' },
