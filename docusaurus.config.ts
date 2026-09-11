@@ -99,6 +99,7 @@ const config: Config = {
             { to: '/infrastructure/', label: '인프라' },
             { to: '/database/', label: '데이터베이스' },
             { to: '/llm/', label: 'LLM' },
+            { to: '/computer-systems/', label: '컴퓨터 시스템' },
           ],
         },
         {
