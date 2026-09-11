@@ -15,8 +15,9 @@ sidebar_position: 1
 ## 어디로 가는가
 
 - **언어 자체**(JavaScript·TypeScript가 무엇이고 어떻게 실행되는가)는 [언어](../languages/index.md)로 갑니다. 여기서는 그 언어로 **브라우저에서 무엇을 만드는가**만 다룹니다.
+- **문서·콘텐츠를 정적 웹사이트로 빌드하는 도구**(VitePress·MkDocs·Docusaurus)는 [정적 사이트 생성기](../static-site-generators/index.md)로 갑니다.
 - **서버가 무엇을 내려주는가**는 [백엔드](../backend/index.md)로 갑니다.
 
 ---
 
-*작성일: 2026-09-07*
+*작성일: 2026-09-11*
