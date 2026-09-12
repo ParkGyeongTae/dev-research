@@ -72,7 +72,7 @@ docs/guide/getting-started.md    -> /guide/getting-started.html
 내부 문서 링크는 확장자를 생략하는 것이 권장됩니다.
 
 ```markdown
-[시작하기](./guide/getting-started)
+[시작하기](/guide/getting-started)
 ```
 
 `.md`나 `.html`을 직접 적는 방식도 동작할 수 있지만, 확장자를 생략하면 VitePress 설정에 따라 최종 URL이 결정되므로 소스 경로와 배포 URL을 덜 강하게 묶을 수 있습니다. — [Routing | VitePress](https://vitepress.dev/guide/routing) (확인: 2026-09-11)
@@ -176,4 +176,4 @@ VitePress     설치되지 않음
 - **이 환경에서의 VitePress 빌드 출력** — `vitepress` 패키지가 설치되어 있지 않아 최소 프로젝트를 직접 생성·빌드하지 못했습니다.
 - **특정 안정 릴리스의 세부 동작** — 공식 문서의 버전 선택기에 `2.0.0-alpha.20`과 `1.6.4`가 함께 표시되어, 이 문서에서는 특정 릴리스에 종속되지 않는 공식 가이드의 개념과 구조를 중심으로 정리했습니다.
 
-*작성일: 2026-09-11*
+*작성일: 2026-09-12*
