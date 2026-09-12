@@ -10,7 +10,7 @@ sidebar_position: 4
 >
 > **검증 상태** — DOM의 목적, tree·node·Document·Element 개념을 원문으로 대조했습니다. 실제 브라우저에서 실행한 JavaScript 출력은 이 환경에서 브라우저를 실행하지 못해 직접 확인하지 않았습니다.
 
-DOM(Document Object Model)은 HTML 문서를 JavaScript와 브라우저 API가 다룰 수 있도록 표현하는 객체 모델입니다. 중요한 점은 DOM이 HTML 텍스트 자체가 아니라, 노드가 부모·자식 관계로 연결된 **트리 구조**라는 것입니다.
+DOM(Document Object Model)은 웹 문서와 그 객체 구조를 JavaScript와 웹 플랫폼 API가 다룰 수 있도록 표현하는 플랫폼 중립 모델입니다. HTML은 DOM을 구성하는 대표적인 입력 형식입니다. 중요한 점은 DOM이 HTML 텍스트 자체가 아니라, 노드가 부모·자식 관계로 연결된 **트리 구조**라는 것입니다.
 
 > DOM defines a platform-neutral model for events, aborting activities, and node trees.
 >
@@ -20,7 +20,7 @@ DOM(Document Object Model)은 HTML 문서를 JavaScript와 브라우저 API가 �
 
 ## HTML과 DOM은 같은 것이 아닙니다
 
-HTML은 서버가 보낸 문자 형식의 문서이고, DOM은 브라우저가 그 문서를 파싱한 뒤 메모리에 구성한 객체 트리입니다.
+HTML은 markup text로 표현된 문서이고, DOM은 브라우저가 그 문서를 파싱한 뒤 메모리에 구성한 객체 트리입니다.
 
 ```html
 <p id="message">Hello</p>
@@ -57,7 +57,7 @@ DOM Standard에서 tree에 참여하는 객체는 부모를 가질 수 있고, �
 
 ```js
 const message = document.querySelector('#message');
-console.log(message.textContent); // Hello
+console.log(message.textContent); // 예상 결과: Hello
 ```
 
 `querySelector()`는 문서 트리에서 선택자에 맞는 요소를 찾고, `textContent`는 그 노드의 문자 내용을 읽습니다. 이 코드가 읽는 대상은 HTML 원문 문자열이 아니라 현재 메모리에 있는 DOM입니다.

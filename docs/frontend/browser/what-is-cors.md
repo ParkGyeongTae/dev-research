@@ -22,7 +22,7 @@ CORS(Cross-Origin Resource Sharing)는 브라우저가 한 origin의 JavaScript�
 
 ## 브라우저가 요청을 보낸 것과 응답을 읽게 한 것은 다릅니다
 
-다음 요청에서 브라우저는 `Origin` 요청 헤더로 요청을 시작한 origin을 보냅니다.
+다음과 같은 교차 출처 CORS 요청에서 브라우저는 `Origin` 요청 헤더로 요청을 시작한 origin을 보냅니다.
 
 ```js
 fetch('https://api.example.com/users')
@@ -90,7 +90,7 @@ Access-Control-Allow-Origin: https://app.example.com
 Access-Control-Allow-Credentials: true
 ```
 
-다음 조합은 허용되지 않습니다.
+다음 조합은 credentials 요청의 응답을 브라우저가 JavaScript에 공유하게 만들지 못합니다.
 
 ```http
 Access-Control-Allow-Origin: *
@@ -104,7 +104,7 @@ CORS 헤더는 인증·인가를 대신하지 않습니다. CORS가 허용되어
 
 ## 응답 헤더도 별도로 노출해야 합니다
 
-`Access-Control-Allow-Origin`이 있다고 해서 모든 응답 헤더를 JavaScript에서 읽을 수 있는 것은 아닙니다. 응답의 사용자 정의 헤더를 노출하려면 서버가 `Access-Control-Expose-Headers`에 이름을 적어야 합니다.
+`Access-Control-Allow-Origin`이 있다고 해서 모든 응답 헤더를 JavaScript에서 읽을 수 있는 것은 아닙니다. 기본적으로 노출되는 CORS-safelisted response headers 외의 응답 헤더를 읽으려면 서버가 `Access-Control-Expose-Headers`에 이름을 적어야 합니다.
 
 ```http
 Access-Control-Allow-Origin: https://app.example.com
