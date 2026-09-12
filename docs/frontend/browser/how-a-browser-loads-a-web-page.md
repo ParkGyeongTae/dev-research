@@ -166,6 +166,8 @@ DOM(Document Object Model)
 
 브라우저가 이 문서를 파싱하면 `html` 아래에 `body`와 `p`, 텍스트 노드가 연결된 DOM을 만듭니다. DOM은 문서의 구조를 표현하지만, 각 노드가 화면의 어느 위치에 어떤 색과 크기로 나타나는지까지 결정하지는 않습니다.
 
+이 문서에서는 DOM 자체의 노드·트리·JavaScript 조작 API를 다루기보다, HTML 파싱 결과가 CSSOM과 결합되어 렌더링 입력이 되는 흐름에 집중합니다.
+
 ## 6. HTML을 파싱하면서 하위 리소스를 추가로 요청합니다
 
 HTML에는 문서 자체만 있는 것이 아닙니다. `<link rel="stylesheet">`, `<script src>`, `<img src>`, `<iframe>`, `<video>` 같은 요소는 다른 리소스를 가리킬 수 있습니다. 브라우저는 HTML 파서와 각 웹 플랫폼 API의 규칙에 따라 이러한 리소스를 발견하고 추가 fetch를 시작합니다.
