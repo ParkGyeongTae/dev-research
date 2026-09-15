@@ -1,87 +1,98 @@
-# Maven이란 무엇인가 — POM으로 Java 빌드를 모델링하는 도구
+# Maven이란 무엇인가 — POM과 생명주기로 빌드를 모델링하는 도구
 
-> **원문** — [Welcome to Apache Maven](https://maven.apache.org/) 및 [Introduction](https://maven.apache.org/what-is-maven)
+> **원문** — [Introduction to the POM](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html), [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
 >
-> **확인 날짜** — 2026-09-15. 특정 판번호가 없는 현재 공식 문서입니다.
+> **확인 날짜** — 2026-09-15. 특정 판번호가 없는 현재 Apache Maven 공식 문서를 확인했습니다.
 >
-> **검증 상태** — 공식 문서의 정의와 POM·빌드 생명주기 설명을 읽었습니다. 이 문서의 실행 환경 절에는 이번 세션에 직접 실행한 Maven Wrapper 출력만 포함했습니다.
+> **검증 상태** — POM·생명주기·phase·plugin 설명을 공식 문서에서 읽었습니다. 이 머신에는 Maven과 Maven Wrapper가 없어 명령은 실행하지 않았습니다.
 
-Maven은 라이브러리를 모아 두는 저장소가 아니라, 프로젝트의 빌드 과정을 정의하고 실행하는 도구입니다. 라이브러리를 저장하는 곳은 Maven Central 같은 원격 Repository나 로컬의 `~/.m2/repository`이고, Maven은 `pom.xml`에 적힌 의존성을 그 저장소에서 가져와 컴파일·테스트·패키징에 사용합니다.
+Maven은 Java 프로젝트의 빌드 도구입니다. 프로젝트의 정보와 빌드 설정을 `pom.xml`이라는 POM(Project Object Model)에 선언하고, 생명주기의 phase를 호출해 컴파일·테스트·패키징·설치·배포를 수행합니다.
 
-Apache 공식 문서는 Maven을 다음처럼 정의합니다.
-
-> Apache Maven is a build tool for Java projects. Using a project object model (POM), Maven manages a project's compilation, testing, and documentation.
+> A Project Object Model or POM is the fundamental unit of work in Maven.
 >
-> **번역** — Apache Maven은 Java 프로젝트를 위한 빌드 도구입니다. Maven은 프로젝트 객체 모델(POM)을 사용해 프로젝트의 컴파일·테스트·문서화를 관리합니다.
+> **번역** — Project Object Model, 즉 POM은 Maven에서 작업의 기본 단위입니다.
 >
-> — [Welcome to Apache Maven](https://maven.apache.org/) (확인: 2026-09-15)
+> — [Introduction to the POM](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) (확인: 2026-09-15)
 
-## POM은 무엇을 적는가
+## POM은 프로젝트의 모델입니다
 
-Maven 프로젝트의 중심 파일은 `pom.xml`입니다. POM은 프로젝트의 이름과 버전, 의존성, 패키징 방식, 플러그인 설정, 하위 모듈을 선언하는 XML 파일입니다. Maven 공식 문서도 POM을 프로젝트 정보와 Maven 빌드 설정을 담는 XML 파일로 설명합니다. — [Introduction to the POM](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) (확인: 2026-09-15)
-
-가장 작은 의존성 선언은 다음과 같습니다.
+최소 POM에는 `project`, `modelVersion`, `groupId`, `artifactId`, `version`이 필요합니다. 의존성·plugin·profile·빌드 설정도 POM에 넣을 수 있습니다. — [Introduction to the POM](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) (확인: 2026-09-15)
 
 ```xml
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>example</groupId>
   <artifactId>hello</artifactId>
   <version>1.0.0</version>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>2.0.17</version>
-    </dependency>
-  </dependencies>
 </project>
 ```
 
-이 선언은 `slf4j-api`를 프로젝트의 의존성으로 모델에 넣습니다. Maven이 라이브러리 파일을 영구적으로 보관한다는 뜻이 아니라, 빌드에 필요한 artifact를 Repository에서 해석하고 classpath에 연결한다는 뜻입니다.
+`pom.xml`은 라이브러리를 저장하는 파일이 아닙니다. Maven이 POM을 읽고 필요한 artifact와 plugin을 Repository에서 해석해 빌드에 사용하도록 만드는 프로젝트 모델입니다. Maven의 기본 디렉터리 관례도 POM 모델에 포함됩니다. 예를 들어 main 소스는 `src/main/java`, 빌드 결과 디렉터리는 `target`입니다. — [Introduction to the POM](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) (확인: 2026-09-15)
 
-## 명령은 생명주기의 단계를 실행한다
+의존성은 다음처럼 선언합니다.
 
-```bash
-mvn compile  # main 소스 컴파일
-mvn test     # 테스트 컴파일 및 실행
-mvn package  # 산출물(JAR 등) 생성
-mvn install  # 산출물을 로컬 Repository에 설치
-mvn deploy   # 원격 Repository에 배포
+```xml
+<dependencies>
+  <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>2.0.17</version>
+  </dependency>
+</dependencies>
 ```
 
-`package`까지는 프로젝트 산출물을 만드는 빌드 과정이고, `install`과 `deploy`는 만들어진 산출물을 Repository에 넣는 단계입니다. 따라서 “Maven으로 패키징한다”와 “Maven Repository에 배포한다”는 서로 다른 작업입니다. Maven 공식 Getting Started 문서도 컴파일, 테스트, JAR 생성, 로컬 설치, 원격 배포를 별도 단계로 나눕니다. — [Getting Started Guide](https://maven.apache.org/guides/getting-started/index.html) (확인: 2026-09-15)
+이 선언은 artifact의 좌표를 프로젝트 모델에 넣는 것입니다. 실제 파일을 어느 Repository에서 가져올지와 의존성 해석 결과는 Repository·캐시·Maven 설정의 영향을 받습니다.
 
-## Maven이 정하는 것과 정하지 않는 것
+## 생명주기와 phase
 
-Maven은 `pom.xml`과 플러그인을 바탕으로 빌드 작업을 실행합니다. `maven-compiler-plugin`은 Java 소스를 컴파일하고, `maven-jar-plugin`은 JAR를 만드는 식입니다. Maven 자체가 모든 언어의 컴파일러인 것은 아니며, 실제 작업은 플러그인과 JDK 같은 외부 도구가 맡습니다.
+Maven에는 `default`, `clean`, `site`의 세 가지 내장 생명주기가 있습니다. `default`는 artifact를 다루고, `clean`은 이전 결과를 지우며, `site`는 프로젝트 사이트를 생성합니다. — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) (확인: 2026-09-15)
 
-이 구조의 장점은 같은 생명주기 명령을 여러 프로젝트에서 반복해서 쓸 수 있다는 점입니다. 반면 프로젝트가 Maven의 표준 구조와 생명주기에서 크게 벗어나면 POM과 플러그인 설정이 복잡해집니다. 이 마지막 판단은 Maven의 표준화 목표와 “관례로 재구성할 수 없는 프로젝트에서는 일부 기능을 포기해야 할 수 있다”는 공식 설명에서 이어지는 실무적 해석입니다. — [Introduction](https://maven.apache.org/what-is-maven) (확인: 2026-09-15)
+`default` 생명주기의 주요 phase는 다음과 같습니다.
 
-## Zeppelin에서의 Maven
+| phase | 의미 |
+| --- | --- |
+| `validate` | 프로젝트가 올바르고 필요한 정보가 있는지 확인합니다. |
+| `compile` | main 소스를 컴파일합니다. |
+| `test` | 테스트 소스를 컴파일하고 단위 테스트를 실행합니다. |
+| `package` | JAR 같은 배포 형식으로 패키징합니다. |
+| `verify` | 통합 테스트 결과 등 추가 검사를 수행합니다. |
+| `install` | artifact를 로컬 Repository에 설치합니다. |
+| `deploy` | artifact를 원격 Repository에 배포합니다. |
 
-Zeppelin 루트 [`pom.xml`](https://github.com/apache/zeppelin/blob/master/pom.xml)은 `<packaging>pom</packaging>`인 상위 프로젝트이며, `zeppelin-server`와 `zeppelin-interpreter` 같은 여러 모듈을 `<modules>`로 묶습니다. `zeppelin-server/pom.xml`은 `jar` 패키징을 선언하고, `zeppelin-distribution`은 Maven Assembly Plugin으로 최종 배포 압축 파일을 만듭니다. 이 저장소의 실제 설정을 읽어 확인한 내용입니다.
+phase를 실행하면 앞선 phase도 순서대로 실행됩니다. 따라서 `mvn package`는 보통 `compile`과 `test`를 거쳐 패키지를 만들고, `mvn install`은 그 결과를 로컬 Repository에 추가합니다. `package`와 `deploy`는 같은 말이 아닙니다. — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) (확인: 2026-09-15)
 
 ```bash
-./mvnw clean install -DskipTests
+mvn compile
+mvn test
+mvn package
+mvn verify
 ```
 
-여기서 `mvnw`는 저장소가 지정한 Maven 버전을 사용하는 Wrapper입니다. `clean`은 이전 빌드 산출물을 지우고, `install`은 모듈을 빌드한 뒤 결과물을 로컬 Repository에도 설치합니다. Zeppelin의 `bin/zeppelin-daemon.sh`는 이 빌드 결과물을 classpath에 올려 `org.apache.zeppelin.server.ZeppelinServer`를 실행합니다.
+Apache 공식 문서는 결과가 확실하지 않을 때 `mvn verify`를 호출하는 방식을 안내합니다. 통합 테스트나 품질 검사가 구성돼 있다면 `package`보다 더 많은 검사가 실행될 수 있습니다. — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) (확인: 2026-09-15)
+
+## plugin이 실제 작업을 제공합니다
+
+Maven의 phase는 추상적인 단계이고, 실제 동작은 plugin의 goal이 phase에 연결되어 수행합니다. 예를 들어 `jar` packaging은 `compile` phase에 compiler plugin의 goal을, `package` phase에 jar plugin의 goal을 연결합니다. plugin은 하나 이상의 goal을 제공할 수 있습니다. — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) (확인: 2026-09-15)
+
+이 구분을 놓치면 `mvn package`가 Maven 자체에 내장된 컴파일러라고 오해하게 됩니다. Maven은 생명주기와 모델을 조정하고, compiler·Surefire·JAR 같은 plugin이 각 작업을 수행합니다. 사용하는 packaging과 plugin 설정에 따라 연결되는 goal은 달라질 수 있습니다.
 
 ## 실행 환경
 
-다음은 2026-09-15에 Zeppelin 저장소에서 직접 실행한 출력입니다.
+2026-09-15에 다음을 확인했습니다.
 
 ```console
-$ ./mvnw -version
-Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)
-Maven home: /Users/pgt0409/.m2/wrapper/dists/apache-maven-3.9.9-bin/33b4b2b4/apache-maven-3.9.9
-Java version: 11.0.31, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk@11/11.0.31/libexec/openjdk.jdk/Contents/Home
-Default locale: ko_KR, platform encoding: UTF-8
-OS name: "mac os x", version: "15.7.4", arch: "aarch64", family: "mac"
+$ command -v mvn
+mvn: command not found
 ```
 
-`mvn` 명령 자체는 설치되어 있지 않았고, 저장소에 포함된 `mvnw`로 Maven 3.9.9를 확인했습니다. 전체 Zeppelin 빌드는 이번 작업에서 실행하지 않았습니다.
+이 저장소에는 Maven Wrapper도 없어 `mvn package`와 `./mvnw package`는 실행하지 않았습니다. 따라서 실제 빌드 출력은 문서에 넣지 않았습니다.
+
+## 확인하지 못한 것
+
+- 이 저장소의 Maven 프로젝트 빌드 결과 — `pom.xml`과 Maven 실행 환경이 없어 확인하지 못했습니다.
+- 특정 packaging·plugin 조합의 정확한 goal 바인딩 — 공식 생명주기 문서의 대표적인 `jar` 기준만 정리했으며, 프로젝트별 설정은 별도 POM 확인이 필요합니다.
 
 *작성일: 2026-09-15*
