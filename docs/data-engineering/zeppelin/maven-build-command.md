@@ -4,11 +4,11 @@ sidebar_position: 4
 
 # Apache Zeppelin의 Maven 빌드 명령은 무엇을 하는가
 
-> 원문 — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), [Maven Wrapper](https://maven.apache.org/tools/mavenwrapper.html), [Skipping Tests](https://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html)
+> 원문 — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), [Maven Wrapper](https://maven.apache.org/tools/mavenwrapper.html), [Skipping Tests](https://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html), 그리고 레포 내 빌드 문서 [docs/setup/basics/how_to_build.md](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/docs/setup/basics/how_to_build.md)
 >
-> 확인 날짜 — 2026-09-15 (Maven 공식 문서는 특정 릴리스 번호가 없는 현재 문서이며, 로컬 Zeppelin은 커밋 `2f403f36b` 기준입니다.)
+> 확인 날짜 — 2026-09-18 (Maven 공식 문서는 릴리스 번호가 없는 현재 문서이며, 로컬 Zeppelin은 커밋 `e816bf1b7` / 0.13.0-SNAPSHOT 기준입니다.)
 >
-> 검증 상태 — Maven 공식 문서와 Zeppelin의 루트 `pom.xml`, `.mvn/wrapper/maven-wrapper.properties`, 실제 빌드 로그를 확인했습니다. `./mvnw clean package -DskipTests`는 실행했지만 `spark/interpreter` 모듈의 `clean` 단계에서 실패해 전체 빌드는 완료하지 못했습니다.
+> 검증 상태 — Maven 공식 문서와 Zeppelin의 루트 `pom.xml`, `zeppelin-interpreter-parent/pom.xml`, `spark/interpreter/pom.xml`, `zeppelin-distribution/pom.xml`, `.mvn/wrapper/maven-wrapper.properties`를 읽었습니다. 2026-09-15 실행에서는 `spark/interpreter`의 `clean`이 실패했고, 2026-09-17 실행에서는 전체 빌드가 완료되었습니다. 그 산출물을 파일 시스템에서 직접 확인했습니다.
 
 ## 결론부터 말하면
 
@@ -16,9 +16,13 @@ sidebar_position: 4
 ./mvnw clean package -DskipTests
 ```
 
-이 명령은 Zeppelin 레포의 루트에서 Maven Wrapper를 실행해 이전 빌드 결과를 지우고, 루트 POM에 선언된 멀티 모듈을 `package` 단계까지 빌드하며, 테스트 실행은 건너뜁니다.
+이 명령은 Zeppelin 레포의 루트에서 Maven Wrapper를 실행해 이전 빌드 결과를 지우고, 루트 POM에 선언된 36개 모듈을 `package` 단계까지 빌드하며, 테스트 실행은 건너뜁니다.
 
-성공한다면 `jar` 모듈에서는 JAR, `war` 모듈에서는 WAR가 만들어집니다. 루트와 parent 모듈처럼 `packaging=pom`인 모듈은 자체 JAR를 만들지 않고 빌드 순서와 설정을 관리합니다. 이는 Maven의 packaging별 기본 lifecycle binding과 Zeppelin 루트 POM의 모듈 선언을 함께 확인한 결론입니다.
+다만 이 레포에서는 일반적인 Maven 상식과 다른 점이 세 가지 있습니다. 문서 뒷부분에서 각각 근거와 함께 다룹니다.
+
+1. **`clean`이 `target/`만 지우지 않습니다.** 각 Interpreter 모듈은 레포 루트의 `interpreter/<이름>/` 디렉터리도 함께 삭제합니다.
+2. **`-DskipTests`를 줘도 `spark/interpreter`는 Spark 소스 tarball 162MB를 내려받아 22,858개 파일로 풀어 놓습니다.** 이 동작은 `test`가 아니라 `validate` phase에 묶여 있습니다.
+3. **이 명령만으로는 배포용 tarball이 만들어지지 않습니다.** 배포물 조립은 `-Pbuild-distr` profile에서만 활성화됩니다.
 
 ## 명령을 부분별로 읽기
 
@@ -30,22 +34,24 @@ sidebar_position: 4
 >
 > — [Maven Wrapper](https://maven.apache.org/tools/mavenwrapper.html) (확인: 2026-09-15)
 
-`mvnw`는 운영체제에 설치된 `mvn`을 직접 호출하는 대신, 프로젝트가 지정한 Maven 배포판을 준비해 실행하는 스크립트입니다. 이 Zeppelin 레포에는 실행 가능한 `mvnw`와 `.mvn/wrapper/maven-wrapper.properties`가 있으며, 설정 파일은 Maven `3.9.9` 배포판 URL을 지정합니다.
+`mvnw`는 운영체제에 설치된 `mvn`을 직접 호출하는 대신, 프로젝트가 지정한 Maven 배포판을 준비해 실행하는 스크립트입니다.
 
-```text
-./mvnw
-  └─ .mvn/wrapper/maven-wrapper.properties를 읽고 Maven 실행
+```properties
+# .mvn/wrapper/maven-wrapper.properties (확인: 2026-09-18)
+wrapperVersion=3.3.2
+distributionType=source
+distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.zip
 ```
 
-이번 레포에서 확인한 실제 버전은 다음과 같습니다.
+레포 내 빌드 문서는 **Maven 3.6.3 이상, JDK 11**을 요구 사항으로 명시합니다. Wrapper를 쓰면 Maven 버전은 자동으로 맞춰지지만 JDK는 맞춰 주지 않습니다. 그리고 실행 스크립트(`bin/common.sh`의 `check_java_version`)는 Java 11 미만이면 `exit 1`로 중단합니다.
+
+이번 환경에서 확인한 값은 다음과 같습니다.
 
 ```text
-Apache Maven 3.9.9
-Java version: 11.0.31
+Apache Maven 3.9.9   (wrapper가 내려받는 배포판)
+Java version: 11.0.31 (OpenJDK, Homebrew)
 OS name: "mac os x", version: "15.7.4", arch: "aarch64"
 ```
-
-이 출력은 2026-09-15에 `/Users/pgt0409/Desktop/git/zeppelin`에서 `./mvnw --version`을 실행한 결과입니다.
 
 ### `clean` — 이전 빌드 결과 삭제
 
@@ -55,14 +61,26 @@ OS name: "mac os x", version: "15.7.4", arch: "aarch64"
 >
 > — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) (확인: 2026-09-15)
 
-Maven의 `clean` lifecycle에서 `clean` phase는 이전 빌드가 만든 파일을 삭제합니다. 일반적인 Maven 프로젝트에서는 각 모듈의 `target/`이 그 대상입니다. 따라서 이 명령은 기존 컴파일 결과가 남아 있는 상태에서 일부 파일만 다시 쓰는 빌드가 아니라, 이전 결과를 제거한 뒤 처음부터 시작하는 빌드입니다.
+일반적인 Maven 프로젝트에서 `clean`의 대상은 각 모듈의 `target/`입니다. **Zeppelin은 여기에 하나를 더 등록해 두었습니다.**
 
-이번 실행에서도 다음 로그를 확인했습니다.
-
-```text
---- clean:3.4.0:clean (default-clean) @ zeppelin ---
-Deleting /Users/pgt0409/Desktop/git/zeppelin/target
+```xml
+<!-- zeppelin-interpreter-parent/pom.xml L163-L175 -->
+<plugin>
+  <artifactId>maven-clean-plugin</artifactId>
+  <configuration>
+    <filesets>
+      <fileset>
+        <directory>${project.basedir}/../interpreter/${interpreter.name}</directory>
+        <followSymlinks>false</followSymlinks>
+      </fileset>
+    </filesets>
+  </configuration>
+</plugin>
 ```
+
+즉 Interpreter 모듈을 clean하면 모듈의 `target/`뿐 아니라 **레포 루트의 `interpreter/<이름>/`** 도 삭제됩니다. 이 디렉터리는 실행 중인 Zeppelin 서버가 읽는 런타임 경로이므로, "왜 빌드했는데 Interpreter가 사라졌나"의 원인이 될 수 있습니다.
+
+— [zeppelin-interpreter-parent/pom.xml#L163-L175](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/zeppelin-interpreter-parent/pom.xml#L163-L175) (확인: 2026-09-18)
 
 ### `package` — 현재 모듈의 배포 형식으로 패키징
 
@@ -72,7 +90,7 @@ Deleting /Users/pgt0409/Desktop/git/zeppelin/target
 >
 > — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) (확인: 2026-09-15)
 
-`package`만 호출해도 Maven은 그 phase에 도달하기 전의 default lifecycle phase를 순서대로 수행합니다. 따라서 보통 다음 흐름이 실행됩니다.
+`package`만 호출해도 Maven은 그 phase에 도달하기 전의 default lifecycle phase를 순서대로 수행합니다.
 
 ```text
 validate
@@ -82,21 +100,31 @@ validate
   → package
 ```
 
-단, 각 phase에서 실제로 어떤 plugin goal이 실행되는지는 POM의 `packaging`과 plugin 설정에 따라 달라집니다. Maven 공식 문서도 `jar` packaging의 `package`에 `jar:jar`, `war` packaging의 `package`에 `war:war`가 연결된다고 설명합니다.
+각 phase에서 실제로 어떤 plugin goal이 실행되는지는 POM의 `packaging`과 plugin 설정에 따라 달라집니다.
 
-Zeppelin 루트 POM은 `packaging=pom`이고 여러 모듈을 `<modules>`에 선언합니다. 따라서 루트에서 이 명령을 실행하면 Maven Reactor가 모듈 의존성 순서에 따라 여러 프로젝트를 빌드합니다. `package`는 루트 POM 하나의 JAR를 만드는 명령이 아닙니다.
+### `package`도 `target/` 밖으로 씁니다
 
-이번 실행의 Reactor 순서에는 다음과 같은 유형이 실제로 표시되었습니다.
+Interpreter 모듈에서 `package`는 shade jar를 모듈의 `target/`이 아니라 **레포 루트의 `interpreter/<이름>/`** 에 직접 씁니다.
 
-```text
-Zeppelin                              [pom]
-Zeppelin: Common                      [jar]
-Zeppelin: Server                      [jar]
-Zeppelin: web angular Application     [war]
-Zeppelin: Packaging distribution      [pom]
+```xml
+<!-- zeppelin-interpreter-parent/pom.xml L135 (maven-shade-plugin, phase=package) -->
+<outputFile>${project.basedir}/../interpreter/${interpreter.name}/${project.artifactId}-${project.version}.jar</outputFile>
+
+<!-- L157 (maven-resources-plugin, phase=package) -->
+<outputDirectory>${project.build.directory}/../../interpreter/${interpreter.name}</outputDirectory>
 ```
 
-— 로컬 실행 로그 (확인: 2026-09-15)
+실제로 빌드 후 디렉터리를 확인하면 다음과 같습니다.
+
+```text
+$ ls -la interpreter/jdbc/
+drwxr-xr-x  7 pgt0409  staff      224  9 17 22:03 .
+-rw-r--r--  1 pgt0409  staff     2314  9 17 22:03 ansi.sql.keywords
+-rw-r--r--  1 pgt0409  staff     6605  9 17 22:03 interpreter-setting.json
+...
+```
+
+`.gitignore`도 `/interpreter/*`를 무시 대상으로 두고 있습니다. 즉 이 디렉터리는 **빌드 산출물이면서 동시에 런타임 설정 위치**입니다.
 
 ### `-DskipTests` — 테스트 실행 건너뛰기
 
@@ -106,50 +134,178 @@ Zeppelin: Packaging distribution      [pom]
 >
 > — [Skipping Tests](https://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html) (확인: 2026-09-15)
 
-`-DskipTests`는 Maven에 `skipTests=true`라는 user property를 전달합니다. 이 레포의 `maven-surefire-plugin`은 그 값을 받아 테스트 메서드를 실행하지 않습니다.
+`-DskipTests`는 Maven에 `skipTests=true`라는 user property를 전달하고, 이 레포의 `maven-surefire-plugin`이 그 값을 받아 테스트 메서드를 실행하지 않습니다.
 
 ```text
-test-compile  → 테스트 코드 컴파일 가능
+test-compile  → 테스트 코드 컴파일은 수행
 test          → Tests are skipped.
 package       → JAR/WAR 패키징 계속
 ```
 
-위 흐름은 이 레포의 실제 로그에서 테스트 코드 컴파일 뒤 `Tests are skipped.`가 출력된 모듈을 확인해 정리한 것입니다. `-DskipTests`는 테스트 실행을 건너뛰는 옵션이지 테스트 코드 컴파일까지 반드시 건너뛰는 옵션은 아닙니다. 테스트 컴파일도 생략해야 하는 경우 Maven Surefire 문서는 `-Dmaven.test.skip=true`를 별도 옵션으로 안내합니다. [Skipping Tests](https://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html) (확인: 2026-09-15)
+`-DskipTests`는 테스트 실행을 건너뛰는 옵션이지 테스트 코드 컴파일까지 건너뛰는 옵션은 아닙니다. 컴파일도 생략하려면 `-Dmaven.test.skip=true`가 필요합니다.
 
-## Zeppelin에서 실제로 달라지는 결과
+참고로 루트 POM의 surefire 설정은 다음과 같습니다. 테스트를 실제로 돌릴 때 필요한 정보입니다.
 
-루트 POM의 `<modules>`에는 `zeppelin-common`, `zeppelin-server`, 각 인터프리터, `zeppelin-web-angular`, `zeppelin-distribution` 등이 선언되어 있습니다. 그러므로 명령이 끝까지 성공하면 다음처럼 여러 산출물이 생기는 것이 정상입니다.
+```xml
+<!-- pom.xml L681-L691 -->
+<configuration combine.children="append">
+  <failIfNoTests>false</failIfNoTests>
+  <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+  <argLine>-Xmx2g -Xms1g -Dfile.encoding=UTF-8 ${extraJavaTestArgs}</argLine>
+  <environmentVariables>
+    <IS_ZEPPELIN_TEST>true</IS_ZEPPELIN_TEST>
+  </environmentVariables>
+  <excludes><exclude>${tests.to.exclude}</exclude></excludes>
+</configuration>
+```
 
-| 모듈 유형 | `package` 결과 | 이 레포에서의 의미 |
-| --- | --- | --- |
-| `jar` | `target/*.jar` | 서버, 공통 코드, 인터프리터, 플러그인 등의 모듈 |
-| `war` | `target/*.war` | 웹 애플리케이션 모듈 |
-| `pom` | 자체 JAR/WAR 없음 | 부모·집계·배포 조립용 모듈 |
+## `-DskipTests`가 줄여 주지 않는 비용
 
-`zeppelin-server`는 `jar` 모듈이고 `org.apache.zeppelin.server.ZeppelinServer`에 `main()`이 있으므로 핵심 서버 코드가 들어가는 산출물입니다. 하지만 Zeppelin의 최종 배포물은 `zeppelin-server` JAR 하나가 아닙니다. `zeppelin-distribution`은 `zeppelin-server`와 `zeppelin-web-angular`를 의존성으로 선언하고 Maven Assembly Plugin으로 배포 패키지를 조립합니다.
+이전 판이 답하지 못했던 "왜 `spark/interpreter`에서 `clean`이 실패했는가"는 여기서 해소됩니다.
 
-— [Zeppelin 루트 POM](https://github.com/apache/zeppelin/blob/2f403f36b1b23183e2cff31b4024d9b85173bfb2/pom.xml#L24-L91), [zeppelin-server의 main](https://github.com/apache/zeppelin/blob/2f403f36b1b23183e2cff31b4024d9b85173bfb2/zeppelin-server/src/main/java/org/apache/zeppelin/server/ZeppelinServer.java#L309-L315), [zeppelin-distribution POM](https://github.com/apache/zeppelin/blob/2f403f36b1b23183e2cff31b4024d9b85173bfb2/zeppelin-distribution/pom.xml#L30-L75) (확인: 2026-09-15)
+`spark/interpreter`는 `download-maven-plugin`으로 **Spark 소스 tarball을 내려받아 `target/` 안에 풀어 놓습니다.**
 
-## 이번에 실제로 실행한 명령
+```xml
+<!-- spark/interpreter/pom.xml L234-L255 -->
+<plugin>
+  <groupId>com.googlecode.maven-download-plugin</groupId>
+  <artifactId>download-maven-plugin</artifactId>
+  <executions>
+    <execution>
+      <id>download-pyspark-files</id>
+      <phase>validate</phase>          <!-- ← test가 아니라 validate -->
+      <goals><goal>wget</goal></goals>
+      <configuration>
+        <unpack>true</unpack>
+        <url>${spark.src.download.url}</url>
+        <outputDirectory>${project.build.directory}</outputDirectory>
+        <outputFileName>${spark.archive}.tgz</outputFileName>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
 
-실행 환경은 다음과 같습니다.
+`validate`는 default lifecycle의 **첫 phase**입니다. 따라서 `-DskipTests`를 주든 말든 이 다운로드와 압축 해제는 실행됩니다. 목적은 뒤이어 `maven-antrun-plugin`이 `python/lib/py4j-*.zip`과 `python/pyspark/`를 꺼내 `interpreter/spark/pyspark/`로 옮기는 것입니다. PySpark를 기본 포함하기 위한 단계입니다.
+
+실제 규모는 다음과 같습니다.
 
 ```text
-레포: /Users/pgt0409/Desktop/git/zeppelin
-커밋: 2f403f36b
-OS: macOS 15.7.4 aarch64
-Java: OpenJDK 11.0.31
-Maven Wrapper: Apache Maven 3.9.9
-확인 날짜: 2026-09-15
+$ du -sh spark/interpreter/target/spark-3.4.3
+162M    spark/interpreter/target/spark-3.4.3
+
+$ find spark/interpreter/target/spark-3.4.3 | wc -l
+   22858
 ```
 
-실행 명령은 사용자가 평소 사용하는 명령과 같습니다.
+**따라서 `spark/interpreter`의 `clean`은 22,000개가 넘는 파일을 지우는 작업입니다.** 다른 모듈의 `clean`과 비용이 전혀 다르고, 이것이 2026-09-15 실행에서 그 모듈에서만 `Failed to delete` 가 발생한 배경입니다. 삭제 실패를 일으킨 정확한 OS 수준 원인(파일 잠금, 인덱싱, 동시 접근 등)은 재현하지 않아 확정하지 못했습니다.
+
+### Spark 버전은 profile로 정해집니다
+
+이전 판은 `spark-3.4.3`을 그대로 적었지만, 그것은 당시 `-Pspark-3.4`로 빌드된 결과였습니다. **현재 소스의 기본값은 3.5.8입니다.**
+
+```text
+spark/interpreter/pom.xml L43   <spark.version>3.5.8</spark.version>   ← 기본값
+                        L478   -Pspark-4.0 → 4.0.0
+                        L489   -Pspark-3.5 → 3.5.8
+                        L501   -Pspark-3.4 → 3.4.3
+                        L510   -Pspark-3.3 → 3.3.4
+```
+
+레포 문서는 이 profile들이 **Spark interpreter의 단위 테스트에만 영향을 준다**고 설명합니다. 실행 시 사용할 Spark 버전은 `SPARK_HOME`으로 정해지므로, 특정 Spark 버전을 쓰려고 그 profile로 빌드할 필요는 없습니다.
+
+— [spark/interpreter/pom.xml#L234-L276](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/spark/interpreter/pom.xml#L234-L276), [docs/setup/basics/how_to_build.md#L80-L105](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/docs/setup/basics/how_to_build.md#L80-L105) (확인: 2026-09-18)
+
+## 어떤 모듈이 빌드되는가
+
+루트 POM의 `<modules>`에는 **36개** 모듈이 선언되어 있습니다. 그런데 네 개의 모듈 그룹은 `<modules>`가 아니라 **profile 안에** 들어 있어서 기본 빌드에 포함되지 않습니다.
+
+| profile | 추가되는 모듈 | 기본 활성화 |
+| --- | --- | --- |
+| `web-classic` | `zeppelin-web` (classic UI, war) | ✗ |
+| `integration` | `zeppelin-integration`, `zeppelin-interpreter-integration` | ✗ |
+| `examples` | `zeppelin-examples` | ✗ |
+| `helium-dev` | `helium-dev` | ✗ |
+
+**따라서 기본 빌드에서 classic UI WAR는 만들어지지 않습니다.** 빌드 후 확인한 결과도 같습니다.
+
+```text
+$ ls zeppelin-web/target/*.war
+zsh: no matches found: zeppelin-web/target/*.war
+
+$ ls zeppelin-web-angular/target/*.war
+zeppelin-web-angular/target/zeppelin-web-angular-0.13.0-SNAPSHOT.war   (37MB)
+```
+
+이것이 [서버 시작 흐름 문서](./startup-flow.md)에서 다룬 "기본 UI가 아닌 쪽은 WAR가 없어도 시작 예외를 던지지 않는다"와 맞물립니다. 기본 설정에서 `/classic`은 조용히 비어 있는 상태가 됩니다.
+
+packaging별 결과는 다음과 같습니다.
+
+| 모듈 유형 | `package` 결과 | 예시 |
+| --- | --- | --- |
+| `jar` | `target/*.jar` | `Zeppelin: Server`, `Zeppelin: Common`, `Zeppelin: Interpreter`, 각 Interpreter |
+| `war` | `target/*.war` | `Zeppelin: web angular Application` |
+| `pom` | 자체 JAR/WAR 없음 | 루트 `Zeppelin`, `Zeppelin: Packaging distribution` |
+| Interpreter 모듈 | 위에 더해 `interpreter/<이름>/*.jar` | `interpreter/jdbc/`, `interpreter/spark/` … |
+
+## 이 명령은 배포물을 만들지 않습니다
+
+이전 판은 "`zeppelin-distribution`이 Maven Assembly Plugin으로 배포 패키지를 조립한다"고 적었습니다. 맞지만 **조건이 빠져 있었습니다.**
+
+`zeppelin-distribution/pom.xml`의 `maven-assembly-plugin`에는 `<configuration>`만 있고 `<executions>`가 없습니다. 즉 어떤 phase에도 묶여 있지 않습니다.
+
+```xml
+<!-- zeppelin-distribution/pom.xml L66-L77 -->
+<plugin>
+  <artifactId>maven-assembly-plugin</artifactId>
+  <configuration>
+    <finalName>${project.parent.artifactId}-${project.version}-bin</finalName>
+    <descriptors><descriptor>src/assemble/distribution.xml</descriptor></descriptors>
+  </configuration>
+  <!-- executions 없음 -->
+</plugin>
+```
+
+`package` phase에 묶는 `make-assembly` execution은 루트 POM의 **`build-distr` profile** 안에 있습니다.
+
+```xml
+<!-- pom.xml L859-L892 (profile id=build-distr) -->
+<plugin>
+  <artifactId>maven-assembly-plugin</artifactId>
+  <executions>
+    <execution>
+      <id>make-assembly</id>
+      <phase>package</phase>
+      <goals><goal>single</goal></goals>
+    </execution>
+  </executions>
+</plugin>
+```
+
+빌드 후 실제로 확인한 결과도 일치합니다.
+
+```text
+$ ls zeppelin-distribution/target/
+maven-shared-archive-resources        ← tarball 없음
+```
+
+배포물이 필요하면 레포 문서가 안내하는 대로 profile을 추가해야 합니다.
 
 ```bash
-./mvnw clean package -DskipTests
+# docs/setup/basics/how_to_build.md L274
+./mvnw clean package -Pbuild-distr
+
+# docs/quickstart/kubernetes.md L166
+./mvnw package -DskipTests -Pbuild-distr
 ```
 
-실제 결과는 다음과 같습니다.
+`build-distr` profile은 surefire의 `skipTests`도 `true`로 고정하므로 `-DskipTests`와 중복해서 줄 필요는 없습니다.
+
+— [zeppelin-distribution/pom.xml#L66-L77](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/zeppelin-distribution/pom.xml#L66-L77), [pom.xml#L859-L892](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/pom.xml#L859-L892), [docs/setup/basics/how_to_build.md#L274](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/docs/setup/basics/how_to_build.md#L274) (확인: 2026-09-18)
+
+## 이번에 실제로 관찰한 결과
+
+### 2026-09-15 — `clean` 단계 실패
 
 ```text
 Reactor Summary for Zeppelin 0.13.0-SNAPSHOT:
@@ -167,10 +323,28 @@ Zeppelin: web angular Application .................. SKIPPED
 Zeppelin: Packaging distribution ................... SKIPPED
 
 BUILD FAILURE
-Failed to delete /Users/pgt0409/Desktop/git/zeppelin/spark/interpreter/target
+Failed to delete .../spark/interpreter/target
 ```
 
-따라서 이번 실행에서 확인된 결론은 “명령이 멀티 모듈 빌드를 시작하고 일부 모듈은 패키징했지만, 전체 빌드가 성공했다”가 아닙니다. `spark/interpreter` 모듈의 `clean` 단계에서 `target` 삭제가 실패해 그 뒤의 모듈은 실행되지 않았습니다. 삭제 실패의 구체적인 원인은 이번 실행만으로는 확인하지 못했습니다.
+### 2026-09-17 — 전체 빌드 완료
+
+같은 명령을 다시 실행한 결과가 파일 시스템에 남아 있습니다. 로그는 보관하지 않았지만 산출물로 확인했습니다.
+
+```text
+$ ls -la spark/interpreter/target/spark-interpreter-0.13.0-SNAPSHOT.jar
+-rw-r--r--  1 pgt0409  staff     69774  9 17 22:02
+
+$ ls -la zeppelin-server/target/zeppelin-server-0.13.0-SNAPSHOT.jar
+-rw-r--r--  1 pgt0409  staff    781851  9 17 22:03
+
+$ ls -la zeppelin-web-angular/target/zeppelin-web-angular-0.13.0-SNAPSHOT.war
+-rw-r--r--  1 pgt0409  staff  37110138  9 17 22:04
+
+$ ls */target/*.jar */target/*.war */*/target/*.jar | wc -l
+      41
+```
+
+즉 **2026-09-15의 실패는 명령이나 소스의 문제가 아니라 재실행으로 해소되는 삭제 실패였습니다.** 그리고 성공한 빌드에서도 `zeppelin-distribution/target/`에는 tarball이 없고 `zeppelin-web/target/`에는 WAR가 없습니다. 위에서 설명한 profile 조건과 일치합니다.
 
 ## 명령 변형의 차이
 
@@ -186,15 +360,34 @@ Failed to delete /Users/pgt0409/Desktop/git/zeppelin/spark/interpreter/target
 
 # package 이후 verify까지 진행
 ./mvnw clean verify
+
+# 실제로 배포 가능한 tarball을 만들 때
+./mvnw clean package -DskipTests -Pbuild-distr
+
+# classic UI까지 포함할 때
+./mvnw clean package -DskipTests -Pbuild-distr -Pweb-classic
+
+# 특정 Spark 버전으로 Spark interpreter 단위 테스트를 맞출 때
+./mvnw clean package -DskipTests -Pspark-3.4
 ```
 
-마지막 명령은 이 레포에서 integration test와 추가 검증이 연결되어 있을 수 있으므로 `package`와 결과가 같다고 단정하면 안 됩니다. 어떤 plugin goal이 실제로 연결되어 있는지는 해당 POM과 profile을 함께 확인해야 합니다.
+`clean verify`는 `package`와 결과가 같다고 단정하면 안 됩니다. 루트 POM에 `maven-failsafe-plugin`이 pluginManagement로 선언되어 있고, integration test 모듈은 `-Pintegration`에서만 reactor에 들어옵니다. 어떤 goal이 실제로 연결되는지는 대상 모듈과 활성 profile을 함께 봐야 합니다.
+
+## 다시 빌드할 때의 점검 순서
+
+1. `java -version`이 11 이상인가 — Wrapper는 Maven만 맞춰 주고 JDK는 맞춰 주지 않습니다.
+2. 배포물이 필요한가 — 필요하면 `-Pbuild-distr`. 없으면 `zeppelin-distribution/target/`은 비어 있는 것이 정상입니다.
+3. classic UI가 필요한가 — 필요하면 `-Pweb-classic`.
+4. `spark/interpreter`에서 오래 걸리거나 `clean`이 실패하는가 — `target/spark-<version>/`의 22,000개 파일 때문입니다. 재실행하거나 그 디렉터리를 먼저 수동으로 지워 봅니다.
+5. 실행 중인 Zeppelin이 있는가 — `clean`이 루트의 `interpreter/<이름>/`도 지우므로 실행 중인 서버에 영향을 줄 수 있습니다.
 
 ## 확인하지 못한 것
 
-- `./mvnw clean package -DskipTests`의 전체 성공 결과는 확인하지 못했습니다 — `spark/interpreter/target` 삭제 실패로 빌드가 중단되었습니다.
-- `spark/interpreter/target`을 삭제하지 못한 운영체제 수준의 원인은 확인하지 못했습니다 — 이번에는 원인 추적보다 명령의 실제 결과 기록을 우선했습니다.
-- 전체 빌드가 성공했을 때 생성되는 모든 JAR·WAR 파일 목록은 확인하지 못했습니다 — 실패 지점 이후 모듈이 실행되지 않았기 때문입니다.
+- `spark/interpreter/target`을 삭제하지 못한 운영체제 수준의 원인은 확정하지 못했습니다 — 규모(162MB, 22,858개 파일)라는 배경까지는 확인했지만, 어떤 파일이 왜 잠겨 있었는지는 재현하지 않았습니다.
+- 2026-09-17 빌드의 Reactor 로그는 남기지 않았습니다 — 산출물 파일과 타임스탬프로만 성공을 확인했습니다.
+- 전체 빌드 소요 시간과 필요한 디스크 용량은 측정하지 않았습니다.
+- `-Pbuild-distr`로 실제 tarball을 만들어 보지는 않았습니다 — `src/assemble/distribution.xml`의 포함 대상까지는 확인하지 않았습니다.
 - `-DskipTests`가 모든 사용자 정의 test 실행 경로를 동일하게 제어하는지는 확인하지 못했습니다 — Surefire·Failsafe와 각 모듈의 별도 plugin 설정을 전부 재현하지 않았습니다.
+- 36개 모듈 각각의 plugin 구성은 확인하지 않았습니다 — `zeppelin-interpreter-parent`의 공통 설정과 `spark/interpreter`·`zeppelin-distribution`의 특이 설정을 중심으로 봤습니다.
 
-*작성일: 2026-09-15*
+*작성일: 2026-09-15 · 개정일: 2026-09-18 (`clean` 실패 원인 규명, `interpreter/` 출력 경로·profile 조건 추가, 성공한 빌드 결과 반영)*
