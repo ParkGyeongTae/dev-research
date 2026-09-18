@@ -6,9 +6,7 @@ sidebar_position: 1
 
 > 원문 — [What is Databricks?](https://docs.databricks.com/aws/en/introduction)
 >
-> 확인 날짜 — 2026-09-10 (문서에 판번호 없음, AWS용 공식 문서 기준)
->
-> 검증 상태 — 공식 문서 전문을 읽고 정리했으며, Databricks 계정·Workspace·Compute가 없어 직접 실행한 내용은 포함하지 않았습니다.
+> 확인 날짜 — 2026-09-10
 
 ## 한 문장으로 말하면
 

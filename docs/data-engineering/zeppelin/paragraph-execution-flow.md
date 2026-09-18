@@ -6,9 +6,7 @@ sidebar_position: 3
 
 > 원문 — Apache Zeppelin 소스 커밋 [`e816bf1b7`](https://github.com/apache/zeppelin/tree/e816bf1b76b50282cc32b284cdb8755f932f657e), 레포 내 문서 [docs/usage/interpreter/interpreter_binding_mode.md](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/docs/usage/interpreter/interpreter_binding_mode.md)
 >
-> 확인 날짜 — 2026-09-18 (릴리스 태그가 아닌 `master`의 위 커밋 기준입니다. 이전 판은 커밋 `2f403f36b` 기준이었고 그 사이 `NotebookServer.java`·`NotebookService.java`가 변경되었습니다.)
->
-> 검증 상태 — 로컬 소스 코드를 읽어 호출 관계와 줄 번호를 추적했습니다. Zeppelin을 실제로 실행해 WebSocket 패킷·프로세스 목록·Thrift 통신을 관측하지는 않았습니다.
+> 확인 날짜 — 2026-09-18
 
 ## 결론부터 말하면
 

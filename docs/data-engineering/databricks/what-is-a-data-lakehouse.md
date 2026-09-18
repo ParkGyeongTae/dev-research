@@ -6,9 +6,7 @@ sidebar_position: 2
 
 > 원문 — [What is a data lakehouse?](https://docs.databricks.com/aws/en/lakehouse/)
 >
-> 확인 날짜 — 2026-09-10 (문서에 판번호 없음, 2026-07-28 최종 갱신된 AWS용 공식 문서 기준)
->
-> 검증 상태 — 공식 문서 전문을 읽고 정리했습니다. Databricks Workspace와 Compute가 없어 직접 실행한 결과는 포함하지 않았습니다.
+> 확인 날짜 — 2026-09-10
 
 ## 한 문장으로 말하면
 

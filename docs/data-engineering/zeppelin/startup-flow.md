@@ -6,9 +6,7 @@ sidebar_position: 2
 
 > 원문 — [ZeppelinServer.java](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/zeppelin-server/src/main/java/org/apache/zeppelin/server/ZeppelinServer.java), [ZeppelinConfiguration.java](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/zeppelin-server/src/main/java/org/apache/zeppelin/conf/ZeppelinConfiguration.java), [bin/zeppelin.sh](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/bin/zeppelin.sh), [bin/zeppelin-daemon.sh](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/bin/zeppelin-daemon.sh), [bin/common.sh](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/bin/common.sh)
 >
-> 확인 날짜 — 2026-09-18 (Apache Zeppelin `master`의 커밋 `e816bf1b76b50282cc32b284cdb8755f932f657e` 기준이며 릴리스 태그 기준이 아닙니다.)
->
-> 검증 상태 — 로컬 소스 코드를 읽어 호출 관계와 줄 번호를 추적했습니다. 실제 Zeppelin 프로세스를 실행한 로그는 포함하지 않았습니다.
+> 확인 날짜 — 2026-09-18
 
 ## 결론부터 말하면
 

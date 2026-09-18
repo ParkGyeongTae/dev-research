@@ -6,9 +6,7 @@ sidebar_position: 4
 
 > 원문 — [Introduction to the Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), [Maven Wrapper](https://maven.apache.org/tools/mavenwrapper.html), [Skipping Tests](https://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html), 그리고 레포 내 빌드 문서 [docs/setup/basics/how_to_build.md](https://github.com/apache/zeppelin/blob/e816bf1b76b50282cc32b284cdb8755f932f657e/docs/setup/basics/how_to_build.md)
 >
-> 확인 날짜 — 2026-09-18 (Maven 공식 문서는 릴리스 번호가 없는 현재 문서이며, 로컬 Zeppelin은 커밋 `e816bf1b7` / 0.13.0-SNAPSHOT 기준입니다.)
->
-> 검증 상태 — Maven 공식 문서와 Zeppelin의 루트 `pom.xml`, `zeppelin-interpreter-parent/pom.xml`, `spark/interpreter/pom.xml`, `zeppelin-distribution/pom.xml`, `.mvn/wrapper/maven-wrapper.properties`를 읽었습니다. 2026-09-15 실행에서는 `spark/interpreter`의 `clean`이 실패했고, 2026-09-17 실행에서는 전체 빌드가 완료되었습니다. 그 산출물을 파일 시스템에서 직접 확인했습니다.
+> 확인 날짜 — 2026-09-18
 
 ## 결론부터 말하면
 

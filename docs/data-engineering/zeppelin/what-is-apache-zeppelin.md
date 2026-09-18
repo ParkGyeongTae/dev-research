@@ -6,9 +6,7 @@ sidebar_position: 1
 
 > 원문 — [Apache Zeppelin 0.12.0 Documentation](https://zeppelin.apache.org/docs/latest/index.html), [Interpreter in Apache Zeppelin](https://zeppelin.apache.org/docs/latest/usage/interpreter/overview.html), [Download Apache Zeppelin](https://zeppelin.apache.org/download.html), 그리고 로컬 레포 `apache/zeppelin` 커밋 [`e816bf1b7`](https://github.com/apache/zeppelin/tree/e816bf1b76b50282cc32b284cdb8755f932f657e)
 >
-> 확인 날짜 — 2026-09-18 (2026-09-13 작성분을 로컬 소스와 대조해 개정했습니다.)
->
-> 검증 상태 — 공식 문서로 정의를 확인하고, 그 정의가 현재 `master` 소스와 실제로 일치하는지 레포에서 대조했습니다. Zeppelin 프로세스를 기동해 Notebook을 실행하지는 않았습니다.
+> 확인 날짜 — 2026-09-18
 
 ## 한 문장으로 말하면
 
