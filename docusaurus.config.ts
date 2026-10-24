@@ -100,6 +100,7 @@ const config: Config = {
             { to: '/database/', label: '데이터베이스' },
             { to: '/llm/', label: 'LLM' },
             { to: '/computer-systems/', label: '컴퓨터 시스템' },
+            { to: '/ideas/', label: '아이디어' },
           ],
         },
         {
